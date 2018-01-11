@@ -40,7 +40,7 @@ city.forEach(function (f) {
                 thisTrain.runTime = data['run_time']
                 thisTrain.arrivalTime = data['end_time']
                 from.train_number.push(thisTrain)
-                fs.appendFile(__dirname + '../city_train.json', JSON.stringify(from), function (e) {
+                fs.appendFile(__dirname + '/../city_train.json', JSON.stringify(from), function (e) {
                     if (e) {
                         console.log(e);
                     }

@@ -1,6 +1,10 @@
+/**
+ * 获取百度地图上景点信息
+ */
+
 var http = require('http');
 var fs = require('fs');
-var city = require('./destination.json').city;
+var city = require('../destination.json').city;
 
 /**
  * 参数信息
@@ -8,58 +12,30 @@ var city = require('./destination.json').city;
 var sightsOptions;  // 请求头信息
 var req;    // http请求
 
-// 景点信息
-function Sight() {
-    this.name = '';
-    this.catalogID = 0;
-    this.std_tag = '';
-    this.addr = '';
-    this.area_name = ''
-    this.diPointX = 0;
-    this.diPointY = 0;
-    this.ext = {
-        'detail_info': {
-            'image': '',
-            'link': [],
-            'overall_rating': '',
-            'impression': [],
-            'shop_hours': '',
-            'short_desc': '',
-            'std_tag': '',
-            'tag': '',
-            'brief_ticket': {},
-            'mapsearchaladdin': {
-                'detail_guide': {},
-                'travel_guide': {}
-            }
-        }
-    }
-}
-
 /**
  * 深拷贝函数
- * @param {Array} data1 - 过滤后的景点数组
- * @param {Array} data2 - 待过滤的景点数组
+ * @param {Array} data - 待过滤的景点数组
  * @param {Array} options - 过滤属性
  */
-function deepCopy(data1, data2, options) {
-    if (typeof options !== 'object') {
-        data1[options] = data2[options];
+function deepCopy(data, options) {
+    if (typeof data === 'object') {
+        if (data instanceof Array) {
+            var newArr = []
+            for (let i = 0; i < data.length; i++) {
+                newArr.push(data[i])
+            }
+            return newArr
+        } else {
+            var newObj = {}
+            for (let key in data) {
+                if(options.indexOf(key) >= 0)
+                    newObj[key] = deepCopy(data[key], options)
+            }
+            return newObj
+        }
+    }else{
+        return data.toString().replace(/<[^>]+>/gim, "")
     }
-    else
-        options.forEach(function (key) {
-            if (typeof key !== 'object') {
-                data1[key] = data2[key];
-            }
-            else {
-                for (var keyItem in key) {
-                    if (!data2[keyItem]) return
-                    deepCopy(data1[keyItem], data2[keyItem], key[keyItem])
-                }
-            }
-        })
-    console.log(data1)
-    return data1;
 }
 
 /**
@@ -89,45 +65,14 @@ function isJSON(str) {
 function solveSights(sightsString) {
     let sights = JSON.parse(sightsString)['content'];
     // 需要的参数
-    let findKeys = [
-        'addr',
-        'name',
-        'area_name',
-        'diPointX',
-        'diPointY',
-        'std_tag',
-        'catalogID',
-        {
-            'ext': [
-                {
-                    'detail_info': [
-                        'image',
-                        'link',
-                        'overall_rating',
-                        'impression',
-                        'shop_hours',
-                        'short_desc',
-                        'std_tag',
-                        'tag',
-                        'brief_ticket',
-                        {
-                            'mapsearchaladdin': [
-                                'detail_guide',
-                                'travel_guide'
-                            ]
-                        }
-                    ]
-                }
-            ]
-        }
-    ]
-    let thisSight = new Sight();
+    let findKeys = ['addr', 'name', 'area_name', 'diPointX', 'diPointY', 'std_tag', 'ext', 'detail_info', 'image', 'link', 'overall_rating', 'impression', 'shop_hours', 'short_desc', 'std_tag', 'comment_num', 'tag', 'brief_ticket', 'mapsearchaladdin']
+    let thisSight = {};
     let sightsArray = [];
     // 过滤需要的属性
     sights.forEach(function (item) {
-        deepCopy(thisSight, item, findKeys);
+        thisSight = deepCopy(item, findKeys);
         sightsArray.push(thisSight);
-        thisSight = new Sight();
+        thisSight = {};
     })
     return sightsArray;
 }
@@ -135,7 +80,7 @@ function solveSights(sightsString) {
 /**
  * 发送请求，获取景点信息，并写入文件
  */
-fs.writeFile(__dirname + '../baiduSights.json', '', function (e) {
+fs.writeFile(__dirname + '/../baiduSights.json', '', function (e) {
     if (e) {
         console.log(e);
     }
@@ -161,7 +106,7 @@ city.forEach(function (item) {
                 if (isJSON(responseString) && JSON.parse(responseString).hasOwnProperty('content')) {
                     var resultObject = JSON.stringify(solveSights(responseString), null, 4);
                     if (resultObject != '') {
-                        fs.appendFile(__dirname + '../baiduSights.json', resultObject, function (e) {
+                        fs.appendFile(__dirname + '/../baiduSights.json', resultObject, function (e) {
                             if (e) {
                                 console.log(e);
                             }

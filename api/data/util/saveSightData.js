@@ -1,6 +1,6 @@
 /**
  * 将景点信息存入数据库
- * 仅可执行一次
+ * 执行前需要将数据库中的数据删除
  */
 
 var mysql = require('mysql');
@@ -29,9 +29,10 @@ let createSightsTable = `create table if not exists sight_data(
                     area_name VARCHAR(1000),
                     diPointX VARCHAR(50), 
                     diPointY VARCHAR(50),
+                    overall_rating VARCHAR(5),
+                    comment_num INTEGER,
                     image VARCHAR(500),
                     link TEXT,
-                    overall_rating VARCHAR(5),
                     short_desc TEXT,
                     tag VARCHAR(50),
                     brief_ticket TEXT,
@@ -45,6 +46,7 @@ connection.query(createSightsTable, function (err, results, fields) {
     }
 });
 data.forEach(function (item) {
+    let info = item['ext']['detail_info'] ? JSON.parse(JSON.stringify(item['ext']['detail_info'])) : ''
     connection.query('insert ignore into sight_data set ?',
         {
             'name': item['name'],
@@ -53,13 +55,14 @@ data.forEach(function (item) {
             'area_name': item['area_name'],
             'diPointX': item['diPointX'],
             'diPointY': item['diPointY'],
-            'image': item['ext']['detail_info']['image'],
-            'link': JSON.stringify(item['ext']['detail_info']['link']),
-            'overall_rating': item['ext']['detail_info']['overall_rating'],
-            'short_desc': JSON.stringify(item['ext']['detail_info']['short_desc']),
-            'tag': item['ext']['detail_info']['tag'],
-            'brief_ticket': JSON.stringify(item['ext']['detail_info']['brief_ticket']),
-            'mapsearchaladdin': JSON.stringify(item['ext']['detail_info']['mapsearchaladdin'])
+            'overall_rating': info ? info['overall_rating'] : '',
+            'comment_num': info ? (info['comment_num'] ? Number(info['comment_num']) : 0) : 0,
+            'image': info ? info['image'] : '',
+            'link': info ? JSON.stringify(info['link']) : '',
+            'short_desc': info ? JSON.stringify(info['short_desc']) : '',
+            'tag': info ? info['tag'] : '',
+            'brief_ticket': info ? JSON.stringify(info['brief_ticket']) : '',
+            'mapsearchaladdin': info ? JSON.stringify(info['mapsearchaladdin']) : ''
         }
         , function (error, results, fields) {
             if (error) throw error;
