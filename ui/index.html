@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <p>登陆</p>
+    <input type="text" id="id"/>
+    <input type="password" id="psd">
+    <button>登陆</button>
+    <br/>
+    <p>注册</p>
+    <input type="text" id="new_id">
+    <input type="text" id="new_name">
+    <input type="password" id="new_psd">
+    <button>注册</button>
+    <script>
+        var inputId = document.getElementById('id')
+        var inputPsd = document.getElementById('psd')
+        var newId = document.getElementById('new_id')
+        var newName = document.getElementById('new_name')
+        var newPsd = document.getElementById('new_psd')
+        var btn = document.getElementsByTagName('button')[0]
+        var newBtn = document.getElementsByTagName('button')[1]
+        btn.addEventListener('click', function (event) {
+            var xhr = new XMLHttpRequest();
+            xhr.open('post', 'http://localhost:3000/login', false)
+            xhr.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
+            xhr.onreadystatechange = function (event) {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    inputId.value = xhr.responseText;
+                }
+            }
+            xhr.send("id=" + inputId.value + "&psd=" + inputPsd.value)
+        }, false)
+        newBtn.addEventListener('click', function(event) {
+            var xhr = new XMLHttpRequest();
+            xhr.open('post', 'http://localhost:3000/signin', false)
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.onreadystatechange = function(event) {
+                if(xhr.readyState == 4 && xhr.status == 200){
+                    newName.value = xhr.responseText;
+                }
+            }
+            xhr.send("id=" + newId.value + "&name=" + newName.value + "&password=" + newPsd.value)
+        }, false)
+    </script>
+</body>
+
+</html>
