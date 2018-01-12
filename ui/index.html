@@ -19,6 +19,10 @@
     <input type="text" id="new_name">
     <input type="password" id="new_psd">
     <button>注册</button>
+    <input type="text" id="start">
+    <input type="text" id="end">
+    <button>完成</button>
+    <div id="sightsList"></div>
     <script>
         var inputId = document.getElementById('id')
         var inputPsd = document.getElementById('psd')
@@ -48,6 +52,49 @@
                 }
             }
             xhr.send("id=" + newId.value + "&name=" + newName.value + "&password=" + newPsd.value)
+        }, false)
+
+        var list = document.getElementById('sightsList')
+        var xhr = new XMLHttpRequest()
+        xhr.open('get', 'http://localhost:3000/sights?tag=景区', false)
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        xhr.onreadystatechange = function(event) {
+            if(xhr.readyState == 4 && xhr.status == 200) {
+                var data = JSON.parse(xhr.responseText)
+                var lists = JSON.parse(data['sightsList'])
+                for(var key in lists){
+                    list.innerHTML += JSON.stringify(lists[key])
+                }
+            }
+        }
+        xhr.send(null)
+        xhr.open('get', 'http://localhost:3000/hotSights?tag=景区', false)
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        xhr.onreadystatechange = function(event) {
+            if(xhr.readyState == 4 && xhr.status == 200) {
+                var data = JSON.parse(xhr.responseText)
+                var listTop = JSON.parse(data['sightsTop'])
+                for(var key in listTop){
+                    list.innerHTML += JSON.stringify(listTop[key])
+                }
+            }
+        }
+        xhr.send(null)
+        var start = document.getElementById('start')
+        var end = document.getElementById('end')
+        var routeBtn = document.getElementsByTagName('button')[2]
+        routeBtn.addEventListener('click', function(event) {
+            var startT = start.value
+            var endT = end.value
+            var xhr = new XMLHttpRequest()
+            xhr.open('post', 'http://localhost:3000/start-end', false)
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+            xhr.onreadystatechange = function(event) {
+                if(xhr.readyState == 4 && xhr.status == 200){
+                    alert(xhr.responseText)
+                }
+            }
+            xhr.send('start=' + startT + '&end=' + endT)
         }, false)
     </script>
 </body>
