@@ -16,7 +16,6 @@ exports.createConnection = function (host, user, password, dataBase) {
 }
 
 exports.insertData = function (obj, database) {
-    obj['detailInfo'] = ''
     Connection.query('insert ignore into ' + database + ' set ? ',
         obj,
         function (error, results, fields) {
@@ -31,7 +30,7 @@ exports.deleteData = function (conditions, database) {
     })
 }
 
-exports.selectData = async function (conditions, database) {
+exports.selectData = async function (field, conditions, database) {
     let result
     let string = ''
     for (let key in conditions) {
@@ -40,7 +39,21 @@ exports.selectData = async function (conditions, database) {
         string += key + '=' + "'" + conditions[key] + "'"
     }
     await new Promise((resolve, reject) => {
-        Connection.query('select * from ' + database + ' where ' + string, function (error, results, fields) {
+        Connection.query('select ' + field.join(",") + ' from ' + database + ' where ' + string, function (error, results, fields) {
+            if (error) throw error;
+            resolve(results)
+        })
+    }).then((data) => {
+        result = data
+    })
+    return result
+}
+
+exports.selectTopData = async function (type, num, database) {
+    let result
+    await new Promise((resolve, reject) => {
+        let sql = "select name,std_tag,addr,area_name,overall_rating,image, link, short_desc, brief_ticket, mapsearchaladdin from " + database + " where std_tag like '%" + type + "%' order by comment_num desc limit 5 offset " + num
+        Connection.query(sql, function (error, results, fields) {
             if (error) throw error;
             resolve(results)
         })
