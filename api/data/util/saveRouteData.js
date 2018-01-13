@@ -10,12 +10,13 @@ var connection = mysql.createConnection({
 connection.connect();
 
 let createRouteTable = `create table if not exists route_data(
-                    id VARCHAR(100) NOT NULL AUTO_INCREMENT,
-                    user_id INTEGER NOT NULL,
+                    id INTEGER NOT NULL AUTO_INCREMENT,
+                    user_id VARCHAR(100) NOT NULL,
+                    date DATE NOT NULL,
                     start VARCHAR(50) NOT NULL,
                     end VARCHAR(50) NOT NULL,
                     sights TEXT,
-                    FOREIGN KEY (user_id) REFERENCES user_data(id)
+                    FOREIGN KEY (user_id) REFERENCES user_data(id),
                     PRIMARY KEY(id)
                     )ENGINE=InnoDB DEFAULT CHARSET=utf8;`;
 connection.query(createRouteTable, function (err, results, fields) {

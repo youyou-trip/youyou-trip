@@ -3,7 +3,10 @@
  */
 
 var express = require('express')
+var jwt = require('jsonwebtoken')
 var router = express.Router()
+
+const key = 'youyoutrip'
 
 var mysql = require('../sqlTool')
 
@@ -13,13 +16,15 @@ router.post('/login', async (req, res) => {
     // 获取用户id和密码，在数据库中匹配用户信息
     let userId = req.body.id
     let psd = req.body.psd
-    let result = await mysql.selectData(['name'], { id: userId, password: psd }, 'user_data')
+    let result = await mysql.selectData(['*'], { id: userId, password: psd }, 'user_data')
     if (result.length >= 1) {
         console.log('用户：' + result['0']['id'] + '登陆成功')
-        res.send('登陆成功')
+        var token = jwt.sign({ id: userId }, key);
+        res.cookie('token', token)
+        res.send('1')     //登陆成功返回1
     }
     else
-        res.send('用户名或密码错误')
+        res.send('0')   //登录失败返回0
 })
 
 router.post('/signin', async (req, res) => {
@@ -29,11 +34,11 @@ router.post('/signin', async (req, res) => {
     let psd = req.body.password
     let result = await mysql.selectData(['name'], { id: id }, 'user_data')
     if (result.length >= 1) {
-        res.send('注册失败，该id已被注册')
+        res.send('0')
     } else {
         mysql.insertData({ id: id, name: userName, password: psd }, 'user_data')
         console.log('用户：' + id + '注册成功')
-        res.send('注册成功')
+        res.send('1')
     }
 })
 
@@ -56,10 +61,20 @@ router.post('/start-end', async (req, res) => {
     // 用户提交起点和终点城市
     let start = req.body.start
     let end = req.body.end
+    // 获取起点城市和终点城市的省份
     let ps = await mysql.selectData(['province'], {name: start}, 'city_data')
     let pe = await mysql.selectData(['province'], {name: end}, 'city_data')
+    // 获取起点终点城市所在省份的所有城市信息
     let cityInfo = await mysql.selectData(['*'], {province: ps, province: pe}, 'city_data')
+
     let hotSights = await mysql.selectTopData('景区', 10, 'sight_data')
+    // 获取用户id，存入数据库
+    let user_id = jwt.verify(req.cookies.token, key).id
+
+    mysql.insertData({user_id: user_id, start: start, end: end, date: new Date()}, 'route_data')
+
+    console.log('路线：' + start + '->' + end + '存储成功')
+
     res.send({ cityInfo: JSON.stringify(cityInfo), hotSights: JSON.stringify(hotSights)})
 })
 
