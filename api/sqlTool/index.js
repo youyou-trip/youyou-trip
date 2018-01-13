@@ -24,12 +24,19 @@ exports.createConnection = function (host, user, password, dataBase) {
  * @param {object} obj - 插入的字段值
  * @param {string} table - 待插入的数据表
  */
-exports.insertData = function (obj, table) {
-    Connection.query('insert ignore into ' + table + ' set ? ',
-        obj,
-        function (error, results, fields) {
-            if (error) throw error;
-        })
+exports.insertData = async function (obj, table) {
+    let result
+    await new Promise((resolve, reject) => {
+        Connection.query('insert ignore into ' + table + ' set ? ',
+            obj,
+            function (error, results, fields) {
+                if (error) throw error;
+                resolve(results)
+            })
+    }).then((data) => {
+        result = data
+    })
+    return result
 }
 
 /**
@@ -56,7 +63,7 @@ exports.selectData = async function (field, conditions, table) {
     for (let key in conditions) {
         if (string !== '')
             string += ' and '
-        string += key + '=' + "'" + conditions[key] + "'"
+        string += key + ' like ' + "'%" + conditions[key] + "%'"
     }
     await new Promise((resolve, reject) => {
         Connection.query('select ' + field.join(",") + ' from ' + table + ' where ' + string, function (error, results, fields) {
