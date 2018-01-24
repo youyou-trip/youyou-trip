@@ -3,12 +3,12 @@
 	       提交方式：post
            格式：“id=xxx&password=xxx”(string)
            url：http://localhost:3000/login
-           返回数据：登陆成功 或者 用户名或密码错误
+           返回数据：1(string,登陆成功) 或者 0(string,用户名或密码错误)
     - 注册：前端页面填写用户id，name，password
 	       提交方式：post
 	       格式：“id=xxx&name=xxx&password=xxx”(string)
 	       url：http://localhost:3000/signin
-           返回数据：注册成功 或者 该id已有人使用
+           返回数据：1(string,注册成功) 或者 0(string,该id已有人使用)
 
 ### 起始/终点输入模块
     功能：输入起点，终点
@@ -23,6 +23,6 @@
 ### 规划城市最短路线
     交互：前端页面将起点，终点以及经过的节点传给后端
           提交方式：post
-          格式：“nodes={'start':xxx, 'end': xxx, 'pass': [x, xx, xxx]}”(string)，提交城市id
+          格式：“start=xxx&end=xxx&passCity=[x, xx, xxx]”(string)，提交城市id
           url：http://localhost:3000/update-path
-          返回数据：城市最短路径，城市用id表示
+          返回数据：城市最短路径，城市用id表示（Array）

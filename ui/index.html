@@ -10,7 +10,7 @@
 
 <body>
     <p>登陆</p>
-    <input type="text" id="id"/>
+    <input type="text" id="id" />
     <input type="password" id="psd">
     <button>登陆</button>
     <br/>
@@ -23,6 +23,8 @@
     <input type="text" id="end">
     <button>完成</button>
     <div id="sightsList"></div>
+    <input type="text" id="distanceI">
+    <button id='distanceB'></button>
     <script>
         var inputId = document.getElementById('id')
         var inputPsd = document.getElementById('psd')
@@ -34,7 +36,8 @@
         btn.addEventListener('click', function (event) {
             var xhr = new XMLHttpRequest();
             xhr.open('post', 'http://localhost:3000/login', false)
-            xhr.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.withCredentials = true;
             xhr.onreadystatechange = function (event) {
                 if (xhr.readyState == 4 && xhr.status == 200) {
                     inputId.value = xhr.responseText;
@@ -42,12 +45,12 @@
             }
             xhr.send("id=" + inputId.value + "&psd=" + inputPsd.value)
         }, false)
-        newBtn.addEventListener('click', function(event) {
+        newBtn.addEventListener('click', function (event) {
             var xhr = new XMLHttpRequest();
             xhr.open('post', 'http://localhost:3000/signin', false)
             xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-            xhr.onreadystatechange = function(event) {
-                if(xhr.readyState == 4 && xhr.status == 200){
+            xhr.onreadystatechange = function (event) {
+                if (xhr.readyState == 4 && xhr.status == 200) {
                     newName.value = xhr.responseText;
                 }
             }
@@ -58,23 +61,25 @@
         var xhr = new XMLHttpRequest()
         xhr.open('get', 'http://localhost:3000/sights?tag=景区', false)
         xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-        xhr.onreadystatechange = function(event) {
-            if(xhr.readyState == 4 && xhr.status == 200) {
+        xhr.withCredentials = true;
+        xhr.onreadystatechange = function (event) {
+            if (xhr.readyState == 4 && xhr.status == 200) {
                 var data = JSON.parse(xhr.responseText)
                 var lists = JSON.parse(data['sightsList'])
-                for(var key in lists){
+                for (var key in lists) {
                     list.innerHTML += JSON.stringify(lists[key])
                 }
             }
         }
         xhr.send(null)
-        xhr.open('get', 'http://localhost:3000/hotSights?tag=景区', false)
+        xhr.open('get', 'http://localhost:3000/hot-sights?tag=景区', false)
         xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-        xhr.onreadystatechange = function(event) {
-            if(xhr.readyState == 4 && xhr.status == 200) {
+        xhr.withCredentials = true;
+        xhr.onreadystatechange = function (event) {
+            if (xhr.readyState == 4 && xhr.status == 200) {
                 var data = JSON.parse(xhr.responseText)
                 var listTop = JSON.parse(data['sightsTop'])
-                for(var key in listTop){
+                for (var key in listTop) {
                     list.innerHTML += JSON.stringify(listTop[key])
                 }
             }
@@ -83,18 +88,34 @@
         var start = document.getElementById('start')
         var end = document.getElementById('end')
         var routeBtn = document.getElementsByTagName('button')[2]
-        routeBtn.addEventListener('click', function(event) {
+        routeBtn.addEventListener('click', function (event) {
             var startT = start.value
             var endT = end.value
             var xhr = new XMLHttpRequest()
             xhr.open('post', 'http://localhost:3000/start-end', false)
             xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
-            xhr.onreadystatechange = function(event) {
-                if(xhr.readyState == 4 && xhr.status == 200){
-                    alert(xhr.responseText)
+            xhr.withCredentials = true;
+            xhr.onreadystatechange = function (event) {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    console.log(xhr.responseText)
                 }
             }
             xhr.send('start=' + startT + '&end=' + endT)
+        }, false)
+
+        var inputD = document.getElementById('distanceI')
+        var btnD = document.getElementById('distanceB')
+        btnD.addEventListener('click', function(event){
+            var xhr = new XMLHttpRequest()
+            xhr.open('post', 'http://localhost:3000/update-path', false)
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+            xhr.withCredentials = true
+            xhr.onreadystatechange = function (event) {
+                if(xhr.readyState == 4 && xhr.status == 200) {
+                    console.log(xhr.responseText)
+                }
+            }
+            xhr.send('start=55&end=68&pass=[10,28,34,36,69]')
         }, false)
     </script>
 </body>
