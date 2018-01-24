@@ -1,3 +1,8 @@
+/**
+ * 根据距离矩阵计算最短路径
+ * @param {Array} D 距离矩阵
+ */
+
 var TSP = function (D) {
     var i, j, k, min, temp;
     var n = 7

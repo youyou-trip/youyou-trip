@@ -1,3 +1,9 @@
+/**
+ * 根据x，y坐标数组计算得到距离矩阵
+ * @param {Array} x x坐标数组
+ * @param {Array} y y坐标数组
+ */
+
 var getDistance = function (x, y){
     var result = []
     x.forEach(function (item1, index1) {
