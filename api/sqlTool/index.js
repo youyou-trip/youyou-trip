@@ -95,3 +95,25 @@ exports.selectTopData = async function (type, num, table) {
     })
     return result
 }
+
+/**
+ * 数据表更新数据
+ * @param {string} 
+ */
+exports.updateData = async function (field, conditions, table) {
+    let array = []
+    let f = ''
+    for (let key in field) {
+        f += key + ' = ? '
+        array.push(field[key])
+    }
+    let c = ''
+    for (let key in conditions) {
+        c += key + ' = ? '
+        array.push(conditions[key])
+    }
+    console.log(array)
+    Connection.query("update " + table + " set " + f + ' where ' + c, array, function (error, results, fields) {
+        if (error) throw error;
+    })
+}
