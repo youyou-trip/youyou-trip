@@ -8,10 +8,11 @@ var router = express.Router()
 var login = require('./login')
 var signup = require('./signup')
 var sights = require('./sights')
-var hot_sights = require('./hot-sights')
+var getCities = require('./getCities')
+var hot_sights = require('./getHotSights')
 var start_end = require('./start-end')
-var short_route = require('./short-route')
 var update_path = require('./update-path')
+var mine = require('./mine')
 
 var mysql = require('../sqlTool')
 
@@ -25,10 +26,13 @@ router.get('/sights', sights)
 
 router.get('/hot-sights', hot_sights)
 
-router.post('/short-route', short_route)
 
 router.post('/start-end', start_end)
 
 router.post('/update-path', update_path)
+
+router.get('/mine', mine)
+
+router.get('/get-cities', getCities)
 
 module.exports = router

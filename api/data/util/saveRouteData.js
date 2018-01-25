@@ -21,6 +21,7 @@ let createRouteTable = `create table if not exists route_data(
                     end VARCHAR(50) NOT NULL,
                     passCity TEXT,
                     sights TEXT,
+                    comment TEXT,
                     FOREIGN KEY (user_id) REFERENCES user_data(id),
                     PRIMARY KEY(route_id)
                     )ENGINE=InnoDB DEFAULT CHARSET=utf8;`;

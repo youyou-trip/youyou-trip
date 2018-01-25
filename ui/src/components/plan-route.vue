@@ -2,11 +2,11 @@
   <div class="plan-route">
     <div class="canvas">
       <div class="myCanvas-wrapper">
-        <myCanvas>绘制地图</myCanvas>
+        <myCanvas :lists="drawCities">绘制地图</myCanvas>
       </div>
       <div class="cities">
         <ul>
-          <li v-for="city in cities" @click="toggleCity($event)" :data-id="city.city_id">
+          <li v-for="city in cities" @click="toggleCity($event)" :data-id="city.city_id" :key="city.id">
             <p class="name">{{city.name}}</p>
           </li>
         </ul>
@@ -14,7 +14,7 @@
     </div>
     <div class="list">
       <ul>
-        <li v-for="sight in sights">{{sight.name}}</li>
+        <li v-for="sight in sights" :key="sight.id">{{sight.name}}</li>
       </ul>
     </div>
   </div>
@@ -29,31 +29,54 @@ export default {
       drawCities: [],
       cities: [],
       sights: [],
-      hotSightsStart: 0
+      hotSightsStart: 0,
+      start: this.$store.getters.getStart,
+      end: this.$store.getters.getEnd
     }
   },
   mounted () {
     fetch({
       method: 'get',
-      url: 'http://localhost:3000/get-cities?hotSightsStart=' + this.hotSightsStart
+      url: 'http://localhost:3000/get-cities?province=陕西'
     })
       .then(res => {
         if (res.data.error === 1) {
           this.cities = res.data.cityInfo
+          this.cities.forEach(item => {
+            if (item['name'] === this.start || item['name'] === this.end) {
+              this.drawCities[item['city_id']] = JSON.parse(JSON.stringify(item))
+            }
+          })
+        }
+      })
+    fetch({
+      method: 'get',
+      url: 'http://localhost:3000/hot-sights?hotSightsStart=' + this.hotSightsStart
+    })
+      .then(res => {
+        if (res.data.error === 1) {
           this.sights = res.data.hotSights
         }
       })
   },
   methods: {
     toggleCity (e) {
-      let target
+      let targetId, targetName
       if (e.target.nodeName === 'P') {
-          target = e.target.parentNode.getAttrite('data-id')
+        targetId = e.target.parentNode.getAttribute('data-id')
+        targetName = e.target.innerHTML
       } else if (e.target.nodeName === 'LI') {
-          target = e.target.getAttrite('data-id')
+        targetId = e.target.getAttribute('data-id')
+        targetName = e.target.childNode.innerHTML
       }
-      if (drawCities.indexOf(target) < 0) {
-        drawCities.push(target)
+      if (!this.drawCities[targetId]) {
+        this.cities.forEach(item => {
+          if (item['city_id'] == targetId) {
+            this.drawCities[targetId] = JSON.parse(JSON.stringify(item))
+          }
+        })
+      } else if (targetName !== this.start && targetName !== this.end){
+        this.drawCities[targetId] = null
       }
     }
   },

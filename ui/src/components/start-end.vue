@@ -24,16 +24,24 @@ export default {
   data () {
     return {
       start: '',
-      end: ''
+      end: '',
+      hotSightsStart: 0
     }
   },
   mounted () {
     fetch({
       method: 'get',
-      url: 'http://localhost:3000/hot-sights',
+      url: 'http://localhost:3000/hot-sights?hotSightsStart=' + this.hotSightsStart,
     })
       .then(res => {
-        this.$refs.hot_sights.innerHTML = JSON.stringify(res)
+        this.$refs.hot_sights.innerHTML += JSON.stringify(res)
+      })
+    fetch({
+    method: 'get',
+    url: 'http://localhost:3000/get-cities?province=陕西',
+    })
+      .then(res => {
+        this.$refs.hot_sights.innerHTML += JSON.stringify(res)
       })
   },
   methods: {
@@ -48,10 +56,10 @@ export default {
         })
           .then(res => {
             if (res.data.error === 1) {
-              console.log(res)
               this.$router.push('/plan-route')
             }
         })
+        this.$store.dispatch('SAVE', {start: this.start, end: this.end})
     }
   }
 }

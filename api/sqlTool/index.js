@@ -82,10 +82,10 @@ exports.selectData = async function (field, conditions, table) {
  * @param {string} num - 需要的热门景点数目
  * @param {string} table - 选择的数据表
  */
-exports.selectTopData = async function (type, num, table) {
+exports.selectTopData = async function (type, start, num, table) {
     let result
     await new Promise((resolve, reject) => {
-        let sql = "select name,std_tag,addr,area_name,overall_rating,image, link, short_desc, brief_ticket, mapsearchaladdin from " + table + " where std_tag like '%" + type + "%' order by comment_num desc limit 5 offset " + num
+        let sql = "select name,std_tag,addr,area_name,overall_rating,image, link, short_desc, brief_ticket, mapsearchaladdin from " + table + " where std_tag like '%" + type + "%' order by comment_num desc limit " + num + " offset " + start
         Connection.query(sql, function (error, results, fields) {
             if (error) throw error;
             resolve(results)
@@ -112,7 +112,6 @@ exports.updateData = async function (field, conditions, table) {
         c += key + ' = ? '
         array.push(conditions[key])
     }
-    console.log(array)
     Connection.query("update " + table + " set " + f + ' where ' + c, array, function (error, results, fields) {
         if (error) throw error;
     })

@@ -3,6 +3,14 @@
 </template>
 <script>
 export default {
+  props: {
+    lists: {
+      type: Array
+    }
+  },
+  mounted () {
+   // this.$watch('lists', )
+  }
 }
 </script>
 <style lang="stylus" scoped>

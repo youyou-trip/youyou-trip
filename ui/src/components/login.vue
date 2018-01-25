@@ -25,20 +25,20 @@ export default {
   },
   methods: {
     login () {
-      let that = this
-        fetch({
-          method: 'post',
-          url: 'http://localhost:3000/login',
-          data: {
-            id: this.user_id,
-            password: this.psd
+     // let that = this
+      fetch({
+        method: 'post',
+        url: 'http://localhost:3000/login',
+        data: {
+          id: this.user_id,
+          password: this.psd
+        }
+      })
+        .then(res => {
+          if (res.data === 1) {
+            this.$router.push('/start-end')
           }
         })
-          .then(res => {
-            if (res.data === 1) {
-              this.$router.push('/start-end')
-            }
-          })
     }
   }
 }

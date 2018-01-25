@@ -6,8 +6,9 @@ const key = fs.readFileSync(__dirname + '/primate.key')
 
 var login = async function(req, res) {
     // 获取用户id和密码，在数据库中匹配用户信息
+    console.log(req.body)
     let userId = req.body.id
-    let psd = req.body.psd
+    let psd = req.body.password
     let result = await mysql.selectData(['*'], { id: userId, password: psd }, 'user_data')
     if (result.length >= 1) {
         console.log('用户：' + result['0']['id'] + '登陆成功')
