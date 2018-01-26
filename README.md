@@ -17,13 +17,12 @@
           提交方式：post
           格式：“start=xxx&end=xxx”(string)
           url: http://localhost:3000/start-end
-          返回数据：所有城市信息（包含坐标，前端根据坐标在地图上显示大致位置）
-                   热门景点信息
-                   { cityInfo: cityInfo(string), hotSights: hotSights(string)}
+          返回数据：{ error: 0|1 }(1代表存储成功)
+                    成功后跳转到规划城市路径路由
 ### 规划城市最短路线模块（放在前端页面实现）
     点击城市名称，切换该城市加入或剔除该节点，并用TSP算法实时计算出最短路径，并更新显示
     点击确定，将路径提交后台，并存入数据表中
-    交互：前端页面将起点，终点以及经过的节点传给后端
+    交互：前端页面将规划好后的路线提交服务器
           提交方式：post
           格式：“route=[x, xx, xxx]”(string)，提交城市id
           url：http://localhost:3000/update-path

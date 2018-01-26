@@ -59,6 +59,8 @@ export default {
               this.$router.push('/plan-route')
             }
         })
+        window.localStorage.setItem('start', this.start)
+        window.localStorage.setItem('end', this.end)
         this.$store.dispatch('SAVE', {start: this.start, end: this.end})
     }
   }

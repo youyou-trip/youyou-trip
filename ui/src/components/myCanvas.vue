@@ -2,6 +2,9 @@
   <div class="myCanvas"></div>
 </template>
 <script>
+import TSP from '../util/TSP'
+import getDistance from '../util/getDistance'
+
 export default {
   props: {
     lists: {

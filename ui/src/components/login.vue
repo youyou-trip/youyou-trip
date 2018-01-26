@@ -36,6 +36,7 @@ export default {
       })
         .then(res => {
           if (res.data === 1) {
+            window.localStorage.setItem('user_id', this.user_id)
             this.$router.push('/start-end')
           }
         })

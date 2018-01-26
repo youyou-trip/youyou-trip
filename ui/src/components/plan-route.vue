@@ -6,8 +6,8 @@
       </div>
       <div class="cities">
         <ul>
-          <li v-for="city in cities" @click="toggleCity($event)" :data-id="city.city_id" :key="city.id">
-            <p class="name">{{city.name}}</p>
+          <li v-for="city in cities" :data-id="city.city_id" :key="city.id" @click="toggleCity($event)">
+            <p>{{city.name}}</p>
           </li>
         </ul>
       </div>
@@ -26,12 +26,13 @@ import myCanvas from '@/components/myCanvas.vue'
 export default {
   data () {
     return {
+      add: true,
       drawCities: [],
       cities: [],
       sights: [],
       hotSightsStart: 0,
-      start: this.$store.getters.getStart,
-      end: this.$store.getters.getEnd
+      start: this.$store.getters.getStart ? this.$store.getters.getStart : window.localStorage.getItem('start'),
+      end: this.$store.getters.getEnd ? this.$store.getters.getEnd : window.localStorage.getItem('end')
     }
   },
   mounted () {
@@ -59,10 +60,19 @@ export default {
         }
       })
   },
+  computed: {
+    addOrSub: function () {
+      console.log(this.add)
+      return {
+        add: this.add,
+        sub: !this.add
+      }
+    }
+  },
   methods: {
     toggleCity (e) {
       let targetId, targetName
-      if (e.target.nodeName === 'P') {
+       if (e.target.nodeName === 'P') {
         targetId = e.target.parentNode.getAttribute('data-id')
         targetName = e.target.innerHTML
       } else if (e.target.nodeName === 'LI') {
@@ -73,11 +83,16 @@ export default {
         this.cities.forEach(item => {
           if (item['city_id'] == targetId) {
             this.drawCities[targetId] = JSON.parse(JSON.stringify(item))
+            e.target.className += 'sub'
+            console.log(e.target.className)
           }
         })
       } else if (targetName !== this.start && targetName !== this.end){
         this.drawCities[targetId] = null
+        e.target.className -= 'sub'
       }
+      this.add = !this.add
+      console.log(this.drawCities)
     }
   },
   components: {
@@ -96,10 +111,29 @@ export default {
     .cities
       ul
         li
+          position: relative
           display: inline-block
           width: 6rem
           margin: 0.2rem 0.5rem
           list-style: none
+          cursor: pointer
+          &:hover
+            p::after
+              display: inline-block
+              position: absolute
+              right: -0.2rem
+              top: -0.4rem
+              width: 0.8rem
+              height: 0.8rem
+              color: #ffffff
+              background: red
+              border-radius: 50%
+              text-align: center
+              line-height: 0.9rem
+              font-size: 0.8rem
+              content: '+'
+            p.sub::after
+              content: '-'
   .list
     flex: 1
     ul
