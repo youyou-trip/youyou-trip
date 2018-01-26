@@ -26,4 +26,4 @@
           提交方式：post
           格式：“route=[x, xx, xxx]”(string)，提交城市id
           url：http://localhost:3000/update-path
-          返回数据：城市最短路径，城市用id表示（Array）
+          返回数据：{error: 1|0}(1代表存储成功)
