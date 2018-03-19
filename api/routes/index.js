@@ -16,11 +16,11 @@ var mine = require('./mine')
 
 var mysql = require('../sqlTool')
 
-var Connection = mysql.createConnection('localhost', 'test', '650314', 'my_db')
+var Connection = mysql.createConnection('localhost', 'root', '650314', 'my_db')
 
 router.post('/login', login)
 
-router.post('/signin', signup)
+router.post('/signup', signup)
 
 router.get('/sights', getSights)
 
