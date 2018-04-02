@@ -25,7 +25,7 @@ export default {
   },
   methods: {
     login () {
-     // let that = this
+      // let that = this
       fetch({
         method: 'post',
         url: 'http://localhost:3000/login',

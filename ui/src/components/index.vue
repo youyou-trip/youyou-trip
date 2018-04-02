@@ -2,15 +2,15 @@
   <div class="index">
     <div class="title">
       <div @click="login">登陆</div>
-      <div @click="sigin">注册</div>
+      <div @click="signup">注册</div>
     </div>
     <login v-if="active"></login>
-    <sigin v-if="!active"></sigin>
+    <signup v-if="!active"></signup>
   </div>
 </template>
 <script>
 import login from './login.vue'
-import sigin from './sigin.vue'
+import signup from './signup.vue'
 
 export default {
   data () {
@@ -22,13 +22,13 @@ export default {
     login () {
       this.active = true
     },
-    sigin () {
+    signup () {
       this.active = false
     }
   },
   components: {
     login: login,
-    sigin: sigin
+    signup: signup
   }
 }
 </script>

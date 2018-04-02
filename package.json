@@ -13,7 +13,6 @@
     "express": "^4.16.2",
     "fs": "0.0.1-security",
     "http": "0.0.0",
-    "phantom": "^4.0.5",
     "request": "^2.83.0",
     "selenium": "^2.20.0",
     "selenium-webdriver": "^3.6.0"
@@ -22,10 +21,13 @@
     "body-parser": "^1.18.2",
     "bufferhelper": "^0.2.1",
     "cheerio": "^1.0.0-rc.2",
+    "cookie-parser": "^1.4.3",
     "cors": "^2.8.4",
     "express": "^4.16.2",
     "http-proxy": "^1.16.2",
     "iconv-lite": "^0.4.19",
+    "jsonwebtoken": "^8.2.0",
+    "mysql": "^2.15.0",
     "urlencode": "^1.1.0"
   }
 }

@@ -1,7 +1,7 @@
 
 export default {
-  'SAVE': (({commit}, obj) => {
+  'SAVE': ({ commit }, obj) => {
     console.log(obj)
     commit('SAVE', obj)
-  })
+  }
 }

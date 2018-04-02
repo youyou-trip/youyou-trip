@@ -9,7 +9,7 @@ const service = axios.create({
 axios.defaults.transformRequest = [function (data) {
   let newData = ''
   for (let k in data) {
-      newData += encodeURIComponent(k) + '=' + encodeURIComponent(data[k])
+    newData += encodeURIComponent(k) + '=' + encodeURIComponent(data[k])
   }
   return newData
 }]
