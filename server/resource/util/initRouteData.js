@@ -1,19 +1,9 @@
 /**
  * 存储路线信息
  */
-
-var mysql = require('mysql');
 var fs = require('fs');
 
-module.exports = function () {
-    var connection = mysql.createConnection({
-        host: 'localhost',
-        user: 'test',
-        password: '650314',
-        database: 'my_db'
-    });
-
-    connection.connect();
+module.exports = function (connection) {
 
     let createRouteTable = `create table if not exists route_data(
                     route_id INTEGER NOT NULL AUTO_INCREMENT,
@@ -32,5 +22,4 @@ module.exports = function () {
             console.log(err.message);
         }
     });
-    connection.end();
 }

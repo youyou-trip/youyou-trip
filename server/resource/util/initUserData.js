@@ -1,15 +1,6 @@
-var mysql = require('mysql');
 var fs = require('fs');
 
-module.exports = function () {
-    var connection = mysql.createConnection({
-        host: 'localhost',
-        user: 'test',
-        password: '650314',
-        database: 'my_db'
-    });
-
-    connection.connect();
+module.exports = function (connection) {
 
     let createUserTable = `create table if not exists user_data(
                     id VARCHAR(100) NOT NULL,
@@ -22,5 +13,4 @@ module.exports = function () {
             console.log(err.message);
         }
     });
-    connection.end();
 }

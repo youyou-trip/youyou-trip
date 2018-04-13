@@ -3,19 +3,10 @@
  * 执行前需要将数据库中的数据删除
  */
 
-var mysql = require('mysql');
 var fs = require('fs');
 var getSights = require('./getSightData');
 
-module.exports = function () {
-    var connection = mysql.createConnection({
-        host: 'localhost',
-        user: 'test',
-        password: '650314',
-        database: 'my_db'
-    });
-
-    connection.connect();
+module.exports = function (connection) {
 
     var data = fs.readFileSync(__dirname + '/../baiduSights.json', 'utf8');
     if (!data) {
@@ -76,7 +67,4 @@ module.exports = function () {
                 // console.log('The solution is: ', results);
             });
     })
-
-    connection.end();
-
 }

@@ -3,18 +3,9 @@
  * 仅可执行一次
  */
 
-var mysql = require('mysql');
 var fs = require('fs');
 
-module.exports = function () {
-    var connection = mysql.createConnection({
-        host: 'localhost',
-        user: 'test',
-        password: '650314',
-        database: 'my_db'
-    });
-
-    connection.connect();
+module.exports = function (connection) {
 
     var city_data = fs.readFileSync(__dirname + '/../city-info.json', 'utf8');
     city_data = JSON.parse(city_data)
@@ -42,6 +33,4 @@ module.exports = function () {
                 // console.log('The solution is: ', results);
             });
     })
-
-    connection.end();
 }
