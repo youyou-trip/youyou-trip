@@ -9,7 +9,8 @@
     "start": "npm run dev",
     "lint": "eslint --ext .js,.vue src",
     "build": "node client/build/build.js",
-    "dev4": "node server/resource/util/index.js"
+    "dev4": "node server/resource/util/index.js",
+    "server": "node server/app.js"
   },
   "author": "lijunyi",
   "license": "ISC",
