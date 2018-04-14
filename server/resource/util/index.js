@@ -24,6 +24,11 @@ function main() {
     initCityData(connection)
 
     console.log('初始化城市信息完成')
+    console.log('初始化用户信息...')
+
+    initUserData(connection)
+
+    console.log('初始化用户信息完成')
     console.log('初始化路径信息...')
 
     initRouteData(connection)
@@ -34,12 +39,7 @@ function main() {
     initSightData(connection)
 
     console.log('初始化景点信息完成')
-    console.log('初始化用户信息...')
-
-    initUserData(connection)
-
-    console.log('初始化用户信息完成')
-
+    
     connection.end();
 }
 main()
