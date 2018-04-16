@@ -6,7 +6,7 @@
 var fs = require('fs');
 var getSights = require('./getSightData');
 
-module.exports = function (connection) {
+module.exports = async function (connection) {
 
     var data = fs.readFileSync(__dirname + '/../baiduSights.json', 'utf8');
     if (!data) {
@@ -18,7 +18,6 @@ module.exports = function (connection) {
     })
 
     data = JSON.parse(data)
-
     let createSightsTable = `create table if not exists sight_data(
                     sight_id INTEGER NOT NULL AUTO_INCREMENT,
                     name VARCHAR(100) NOT NULL,
@@ -37,34 +36,42 @@ module.exports = function (connection) {
                     mapsearchaladdin TEXT,
                     PRIMARY KEY(sight_id)
                     )ENGINE=InnoDB DEFAULT CHARSET=utf8;`;
-
-    connection.query(createSightsTable, function (err, results, fields) {
-        if (err) {
-            console.log(err.message);
-        }
-    });
-    data.forEach(function (item) {
-        let info = item['ext']['detail_info'] ? JSON.parse(JSON.stringify(item['ext']['detail_info'])) : ''
-        connection.query('insert ignore into sight_data set ?',
-            {
-                'name': item['name'],
-                'std_tag': item['std_tag'],
-                'addr': item['addr'],
-                'area_name': item['area_name'],
-                'diPointX': item['diPointX'],
-                'diPointY': item['diPointY'],
-                'overall_rating': info ? info['overall_rating'] : '',
-                'comment_num': info ? (info['comment_num'] ? Number(info['comment_num']) : 0) : 0,
-                'image': info ? info['image'] : '',
-                'link': info ? JSON.stringify(info['link']) : '',
-                'short_desc': info ? JSON.stringify(info['short_desc']) : '',
-                'tag': info ? info['tag'] : '',
-                'brief_ticket': info ? JSON.stringify(info['brief_ticket']) : '',
-                'mapsearchaladdin': info ? JSON.stringify(info['mapsearchaladdin']) : ''
+    console.log('初始化景点信息...');
+    await new Promise((resolve, reject) => {
+        connection.query(createSightsTable, function (err, results, fields) {
+            if (err) {
+                console.log(err.message);
             }
-            , function (error, results, fields) {
-                if (error) throw error;
-                // console.log('The solution is: ', results);
-            });
+            data.forEach(function (item, index) {
+                let info = item['ext']['detail_info'] ? JSON.parse(JSON.stringify(item['ext']['detail_info'])) : ''
+                connection.query('insert ignore into sight_data set ?',
+                    {
+                        'name': item['name'],
+                        'std_tag': item['std_tag'],
+                        'addr': item['addr'],
+                        'area_name': item['area_name'],
+                        'diPointX': item['diPointX'],
+                        'diPointY': item['diPointY'],
+                        'overall_rating': info ? info['overall_rating'] : '',
+                        'comment_num': info ? (info['comment_num'] ? Number(info['comment_num']) : 0) : 0,
+                        'image': info ? info['image'] : '',
+                        'link': info ? JSON.stringify(info['link']) : '',
+                        'short_desc': info ? JSON.stringify(info['short_desc']) : '',
+                        'tag': info ? info['tag'] : '',
+                        'brief_ticket': info ? JSON.stringify(info['brief_ticket']) : '',
+                        'mapsearchaladdin': info ? JSON.stringify(info['mapsearchaladdin']) : ''
+                    }
+                    , function (error, results, fields) {
+                        if (error) throw error;
+                        // console.log('The solution is: ', results);
+                        if (index == data.length-1) {
+                            resolve()
+                        }
+                    });
+            })
+        });
     })
+        .then(() => {
+            console.log('初始化景点信息完成')
+        })
 }

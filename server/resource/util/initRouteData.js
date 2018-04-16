@@ -3,7 +3,7 @@
  */
 var fs = require('fs');
 
-module.exports = function (connection) {
+module.exports = async function (connection) {
 
     let createRouteTable = `create table if not exists route_data(
                     route_id INTEGER NOT NULL AUTO_INCREMENT,
@@ -17,9 +17,16 @@ module.exports = function (connection) {
                     FOREIGN KEY (user_id) REFERENCES user_data(id),
                     PRIMARY KEY(route_id)
                     )ENGINE=InnoDB DEFAULT CHARSET=utf8;`;
-    connection.query(createRouteTable, function (err, results, fields) {
-        if (err) {
-            console.log(err.message);
-        }
-    });
+    console.log('初始化路径信息...')
+    await new Promise((resolve, reject) => {
+        connection.query(createRouteTable, function (err, results, fields) {
+            if (err) {
+                console.log(err.message);
+            }
+            resolve();
+        });
+    })
+        .then(() => {
+            console.log('初始化路径信息完成')
+        })
 }
