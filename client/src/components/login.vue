@@ -14,53 +14,62 @@
     </div>
 </template>
 <script>
-import fetch from '@/util/fetch'
+import fetch from "@/util/fetch";
 
 export default {
-  data () {
+  data() {
     return {
-      user_id: '',
-      psd: ''
-    }
+      user_id: "",
+      psd: ""
+    };
   },
   methods: {
-    login () {
-     // let that = this
-      fetch({
-        method: 'post',
-        url: 'http://localhost:3000/login',
-        data: {
-          id: this.user_id,
-          password: this.psd
-        }
-      })
-        .then(res => {
-          if (res.data === 1) {
-            window.localStorage.setItem('user_id', this.user_id)
-            this.$router.push('/start-end')
+    login() {
+      // let that = this
+      if (this.user_id && this.psd) {
+        fetch({
+          method: "post",
+          url: "http://localhost:3000/login",
+          data: {
+            id: this.user_id,
+            password: this.psd
           }
-        })
+        }).then(res => {
+          if (res.data === 1) {
+            window.localStorage.setItem("user_id", this.user_id);
+            this.$router.push("/start-end");
+          }
+        });
+      }
     }
   }
-}
+};
 </script>
 
 <style lang="stylus" scoped>
-.login
-  height: 40rem
-  .box
-    div
-      padding: 10px 20px
-      span
-        display: inline-block
-        width: 4rem
-  button
-    margin: 2rem
-    width: 4rem
-    height: 2rem
-    background: #333
-    border: none
-    color: #fff
-    border-radius: 3px
-    cursor: pointer
+.login {
+  height: 40rem;
+
+  .box {
+    div {
+      padding: 10px 20px;
+
+      span {
+        display: inline-block;
+        width: 4rem;
+      }
+    }
+  }
+
+  button {
+    margin: 2rem;
+    width: 4rem;
+    height: 2rem;
+    background: #333;
+    border: none;
+    color: #fff;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+}
 </style>

@@ -61,11 +61,20 @@ exports.deleteData = function (conditions, table) {
 exports.selectData = async function (field, conditions, table) {
     let result
     let string = ''
-    for (let key in conditions) {
-        if (string !== '')
-            string += ' and '
-        string += key + ' like ' + "'%" + conditions[key] + "%'"
+    if (table != 'user_data') {
+        for (let key in conditions) {
+            if (string !== '')
+                string += ' and '
+            string += key + ' like ' + "'%" + conditions[key] + "%'"
+        }
+    } else {
+        for (let key in conditions) {
+            if (string !== '')
+                string += ' and '
+            string += key + '=' + conditions[key]
+        }
     }
+    console.log(string)
     await new Promise((resolve, reject) => {
         Connection.query('select ' + field.join(",") + ' from ' + table + ' where ' + string, function (error, results, fields) {
             if (error) throw error;
