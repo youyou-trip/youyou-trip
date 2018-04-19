@@ -15,7 +15,6 @@
 </template>
 <script>
 import fetch from '@/util/fetch'
-
 export default {
   data () {
     return {

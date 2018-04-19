@@ -65,6 +65,7 @@
     "bufferhelper": "^0.2.1",
     "cookie-parser": "^1.4.3",
     "cors": "^2.8.4",
+    "eventproxy": "^1.0.0",
     "express": "^4.16.2",
     "http-proxy": "^1.16.2",
     "iconv-lite": "^0.4.19",
