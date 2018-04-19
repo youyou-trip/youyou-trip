@@ -25,7 +25,7 @@
                 :radius-dot="setting.radiusDot"
                 :trigger="setting.trigger"
                 :arrow="setting.arrow">
-                <CarouselItem v-for="hot in hotsights">
+                <CarouselItem v-for="(hot, index) in hotsights" v-bind:key="index">
                     <img v-bind:src="hot.image" alt="图片"/>
                     <div class="demo-caroussel">{{hot.name}}</div>
                 </CarouselItem>

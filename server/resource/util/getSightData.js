@@ -14,9 +14,6 @@ var {isJSON, solveSights} = require('../../lib/sightsTools')
 var sightsOptions;  // 请求头信息
 var req;    // http请求
 
-//module.exports = 
-
-
 function main() {
     /**
  * 发送请求，获取景点信息，并写入文件

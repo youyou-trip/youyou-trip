@@ -13,14 +13,14 @@ async function main() {
 
     console.log('数据库连接成功！')
 
- //   await initCityData(connection)
+    await initCityData(connection)
 
-//    await initUserData(connection)
+    await initUserData(connection)
 
-//    await initRouteData(connection)
+    await initRouteData(connection)
 
     await initSightData(connection)
-    
- //   connection.end();
+
+    //   connection.end();
 }
 main()
