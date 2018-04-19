@@ -69,6 +69,7 @@
     "express": "^4.16.2",
     "http-proxy": "^1.16.2",
     "iconv-lite": "^0.4.19",
+    "iview": "^2.13.0",
     "jsonwebtoken": "^8.2.0",
     "mysql": "^2.15.0",
     "stylus": "^0.54.5",

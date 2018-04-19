@@ -1,16 +1,16 @@
 <template>
     <div class="login">
         <div class="box">
-            <div>
-                <span>用户名:</span>
-                <input type="text" v-model="user_id">
+            <div class="input">
+              <Icon type="ios-person"></Icon>
+              <Input v-model="user_id" placeholder="用户名" style="width: 250px">
             </div>
-            <div>
-                <span>密码:</span>
-                <input type="password" v-model="psd">
+            <div class="input">
+              <Icon type="ios-compose-outline"></Icon>
+              <Input v-model="psd" type="password" placeholder="密码" style="width: 250px">
             </div>
         </div>
-        <button @click="login">登陆</button>
+        <Button @click="login" type="success">确定</Button>
     </div>
 </template>
 <script>
@@ -24,52 +24,32 @@ export default {
     };
   },
   methods: {
-    login() {
-      // let that = this
-      if (this.user_id && this.psd) {
-        fetch({
-          method: "post",
-          url: "http://localhost:3000/login",
-          data: {
-            id: this.user_id,
-            password: this.psd
-          }
-        }).then(res => {
+    login () {
+      fetch({
+        method: 'post',
+        url: 'http://localhost:3000/login',
+        data: {
+          id: this.user_id,
+          password: this.psd
+        }
+      })
+        .then(res => {
           if (res.data === 1) {
-            window.localStorage.setItem("user_id", this.user_id);
-            this.$router.push("/start-end");
+            window.localStorage.setItem('user_id', this.user_id)
+            this.$router.push('/')
           }
         });
       }
     }
   }
-};
 </script>
 
 <style lang="stylus" scoped>
-.login {
-  height: 40rem;
-
-  .box {
-    div {
-      padding: 10px 20px;
-
-      span {
-        display: inline-block;
-        width: 4rem;
-      }
-    }
-  }
-
-  button {
-    margin: 2rem;
-    width: 4rem;
-    height: 2rem;
-    background: #333;
-    border: none;
-    color: #fff;
-    border-radius: 3px;
-    cursor: pointer;
-  }
-}
+.login
+  .box
+    .input
+      margin: 20px auto
+  Button
+      width:200px
+      margin:50px 0
 </style>
