@@ -14,14 +14,13 @@
     </div>
 </template>
 <script>
-import fetch from "@/util/fetch";
-
+import fetch from '@/util/fetch'
 export default {
-  data() {
+  data () {
     return {
-      user_id: "",
-      psd: ""
-    };
+      user_id: '',
+      psd: ''
+    }
   },
   methods: {
     login () {
@@ -38,10 +37,10 @@ export default {
             window.localStorage.setItem('user_id', this.user_id)
             this.$router.push('/')
           }
-        });
-      }
+        })
     }
   }
+}
 </script>
 
 <style lang="stylus" scoped>
