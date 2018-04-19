@@ -1,12 +1,17 @@
 <template>
   <div id="app">
-    <router-view/>
+    <m-header></m-header>
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
+import MHeader from './components/MHeader.vue'
 export default {
-  name: 'App'
+  name: 'App',
+  components: {
+    MHeader: MHeader
+  }
 }
 </script>
 
@@ -24,6 +29,5 @@ html {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
 }
 </style>
