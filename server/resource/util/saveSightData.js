@@ -4,15 +4,17 @@
  */
 
 var fs = require('fs');
-var getSights = require('./getSightData');
+var schedule = require('node-schedule')
+var getSights = require('./getSightData')
+var updateSights = require('./updateSightData')
 
 module.exports = async function (connection) {
 
     var data = fs.readFileSync(__dirname + '/../baiduSights.json', 'utf8');
-    if (!data) {
-        getSights();
-        data = fs.readFileSync(__dirname + '/../baiduSights.json', 'utf8');
-    }
+    // if (!data) {
+    //     getSights();
+    //     data = fs.readFileSync(__dirname + '/../baiduSights.json', 'utf8');
+    // }
     data = data.replace(/\]\[/g, function () {
         return ','
     })
@@ -42,36 +44,47 @@ module.exports = async function (connection) {
             if (err) {
                 console.log(err.message);
             }
-            data.forEach(function (item, index) {
-                let info = item['ext']['detail_info'] ? JSON.parse(JSON.stringify(item['ext']['detail_info'])) : ''
-                connection.query('insert ignore into sight_data set ?',
-                    {
-                        'name': item['name'],
-                        'std_tag': item['std_tag'],
-                        'addr': item['addr'],
-                        'area_name': item['area_name'],
-                        'diPointX': item['diPointX'],
-                        'diPointY': item['diPointY'],
-                        'overall_rating': info ? info['overall_rating'] : '',
-                        'comment_num': info ? (info['comment_num'] ? Number(info['comment_num']) : 0) : 0,
-                        'image': info ? info['image'] : '',
-                        'link': info ? JSON.stringify(info['link']) : '',
-                        'short_desc': info ? JSON.stringify(info['short_desc']) : '',
-                        'tag': info ? info['tag'] : '',
-                        'brief_ticket': info ? JSON.stringify(info['brief_ticket']) : '',
-                        'mapsearchaladdin': info ? JSON.stringify(info['mapsearchaladdin']) : ''
-                    }
-                    , function (error, results, fields) {
-                        if (error) throw error;
-                        // console.log('The solution is: ', results);
-                        if (index == data.length-1) {
-                            resolve()
-                        }
-                    });
-            })
+            // data.forEach(function (item, index) {
+            //     let info = item['ext']['detail_info'] ? JSON.parse(JSON.stringify(item['ext']['detail_info'])) : ''
+            //     connection.query('insert ignore into sight_data set ?',
+            //         {
+            //             'name': item['name'],
+            //             'std_tag': item['std_tag'],
+            //             'addr': item['addr'],
+            //             'area_name': item['area_name'],
+            //             'diPointX': item['diPointX'],
+            //             'diPointY': item['diPointY'],
+            //             'overall_rating': info ? info['overall_rating'] : '',
+            //             'comment_num': info ? (info['comment_num'] ? Number(info['comment_num']) : 0) : 0,
+            //             'image': info ? info['image'] : '',
+            //             'link': info ? JSON.stringify(info['link']) : '',
+            //             'short_desc': info ? JSON.stringify(info['short_desc']) : '',
+            //             'tag': info ? info['tag'] : '',
+            //             'brief_ticket': info ? JSON.stringify(info['brief_ticket']) : '',
+            //             'mapsearchaladdin': info ? JSON.stringify(info['mapsearchaladdin']) : ''
+            //         }
+            //         , function (error, results, fields) {
+            //             if (error) {
+            //                 reject(error)
+            //             }
+            //             if (index == data.length - 1) {
+            //                 resolve()
+            //             }
+            //         });
+            // })
+            resolve()
         });
     })
         .then(() => {
             console.log('初始化景点信息完成')
+            console.log('每天8:00开始，每隔30分钟更新景点数据')
+            schedule.scheduleJob(
+                '30 * * * *',
+                // 执行定时任务
+                updateSights(connection)
+            )
+        })
+        .catch((error) => {
+            console.error(error);
         })
 }

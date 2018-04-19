@@ -18,5 +18,7 @@ module.exports = async function (connection) {
     })
         .then(() => {
             console.log('初始化用户信息完成')
+        }).catch((error) => {
+            console.error(error);
         })
 }

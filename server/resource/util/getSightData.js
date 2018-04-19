@@ -5,6 +5,8 @@
 var http = require('http');
 var fs = require('fs');
 var city = require('../destination.json').city;
+var deepCopy = require('../../lib/deepCopy')
+var {isJSON, solveSights} = require('../../lib/sightsTools')
 
 /**
  * 参数信息
@@ -12,72 +14,10 @@ var city = require('../destination.json').city;
 var sightsOptions;  // 请求头信息
 var req;    // http请求
 
-/**
- * 深拷贝函数
- * @param {Array} data - 待过滤的景点数组
- * @param {Array} options - 过滤属性
- */
-function deepCopy(data, options) {
-    if (typeof data === 'object') {
-        if (data instanceof Array) {
-            var newArr = []
-            for (let i = 0; i < data.length; i++) {
-                newArr.push(data[i])
-            }
-            return newArr
-        } else {
-            var newObj = {}
-            for (let key in data) {
-                if (options.indexOf(key) >= 0)
-                    newObj[key] = deepCopy(data[key], options)
-            }
-            return newObj
-        }
-    } else {
-        return data.toString().replace(/<[^>]+>/gim, "")
-    }
-}
+//module.exports = 
 
-/**
- * 判断字符串是否是json格式
- */
-function isJSON(str) {
-    if (typeof str == 'string') {
-        try {
-            var obj = JSON.parse(str);
-            if (str.indexOf('{') > -1 && str.indexOf('}') > -1) {
-                return true;
-            } else {
-                return false;
-            }
 
-        } catch (e) {
-            return false;
-        }
-    }
-    return false;
-}
-
-/**
- * 处理请求返回景点函数
- * @param {string} sightsString - 请求返回的景点字符串
- */
-function solveSights(sightsString) {
-    let sights = JSON.parse(sightsString)['content'];
-    // 需要的参数
-    let findKeys = ['addr', 'name', 'area_name', 'diPointX', 'diPointY', 'std_tag', 'ext', 'detail_info', 'image', 'link', 'overall_rating', 'impression', 'shop_hours', 'short_desc', 'std_tag', 'comment_num', 'tag', 'brief_ticket', 'mapsearchaladdin']
-    let thisSight = {};
-    let sightsArray = [];
-    // 过滤需要的属性
-    sights.forEach(function (item) {
-        thisSight = deepCopy(item, findKeys);
-        sightsArray.push(thisSight);
-        thisSight = {};
-    })
-    return sightsArray;
-}
-
-module.exports = function () {
+function main() {
     /**
  * 发送请求，获取景点信息，并写入文件
  */
@@ -123,4 +63,6 @@ module.exports = function () {
             req.end();
         }
     })
-}
+} 
+
+module.exports = main;

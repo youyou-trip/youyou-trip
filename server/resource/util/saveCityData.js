@@ -39,5 +39,7 @@ module.exports = async function (connection) {
     })
         .then(() => {
             console.log('初始化城市信息完成')
+        }).catch((error) => {
+            console.error(error);
         })
 }

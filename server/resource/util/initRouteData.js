@@ -28,5 +28,7 @@ module.exports = async function (connection) {
     })
         .then(() => {
             console.log('初始化路径信息完成')
+        }).catch((error) => {
+            console.error(error);
         })
 }
