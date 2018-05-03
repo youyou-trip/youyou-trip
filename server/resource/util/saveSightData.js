@@ -39,14 +39,15 @@ module.exports = async function (connection) {
                     PRIMARY KEY(sight_id)
                     )ENGINE=InnoDB DEFAULT CHARSET=utf8;`;
     console.log('初始化景点信息...');
+
     await new Promise((resolve, reject) => {
-        connection.query(createSightsTable, function (err, results, fields) {
+        connection.Connection.query(createSightsTable, function (err, results, fields) {
             if (err) {
                 console.log(err.message);
             }
             data.forEach(function (item, index) {
                 let info = item['ext']['detail_info'] ? JSON.parse(JSON.stringify(item['ext']['detail_info'])) : ''
-                connection.query('insert ignore into sight_data set ?',
+                connection.insertData(
                     {
                         'name': item['name'],
                         'std_tag': item['std_tag'],
@@ -62,26 +63,27 @@ module.exports = async function (connection) {
                         'tag': info ? info['tag'] : '',
                         'brief_ticket': info ? JSON.stringify(info['brief_ticket']) : '',
                         'mapsearchaladdin': info ? JSON.stringify(info['mapsearchaladdin']) : ''
-                    }
-                    , function (error, results, fields) {
-                        if (error) {
-                            reject(error)
-                        }
+                    },
+                    'sight_data',
+                    function (error, result) {
+                        if (error) throw error;
                         if (index == data.length - 1) {
                             resolve()
                         }
-                    });
+                    }
+                )
             })
-            resolve()
         });
     })
         .then(() => {
             console.log('初始化景点信息完成')
             console.log('每天8:00开始，每隔30分钟更新景点数据')
-            schedule.scheduleJob(
-                '30 * * * *',
+            var j = schedule.scheduleJob(
+                '1 * * * *',
                 // 执行定时任务
-                updateSights(connection)
+                function () {
+                    updateSights(connection)
+                }
             )
         })
         .catch((error) => {

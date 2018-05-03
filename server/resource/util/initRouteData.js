@@ -6,7 +6,7 @@ var fs = require('fs');
 module.exports = async function (connection) {
 
     let createRouteTable = `create table if not exists route_data(
-                    route_id INTEGER NOT NULL AUTO_INCREMENT,
+                    route_id VARCHAR(20) NOT NULL,
                     user_id VARCHAR(100) NOT NULL,
                     date DATE NOT NULL,
                     start VARCHAR(50) NOT NULL,
@@ -14,12 +14,12 @@ module.exports = async function (connection) {
                     passCity TEXT,
                     sights TEXT,
                     comment TEXT,
-                    FOREIGN KEY (user_id) REFERENCES user_data(id),
+                    FOREIGN KEY (user_id) REFERENCES user_data(user_id),
                     PRIMARY KEY(route_id)
                     )ENGINE=InnoDB DEFAULT CHARSET=utf8;`;
     console.log('初始化路径信息...')
     await new Promise((resolve, reject) => {
-        connection.query(createRouteTable, function (err, results, fields) {
+        connection.Connection.query(createRouteTable, function (err, results, fields) {
             if (err) {
                 console.log(err.message);
             }

@@ -6,21 +6,19 @@ const initCityData = require('./saveCityData')
 const initUserData = require('./initUserData')
 const initRouteData = require('./initRouteData')
 const initSightData = require('./saveSightData')
-const mysql = require('../../sqlTool');
+const Mysql = require('../../sqlTool');
 
 async function main() {
-    var connection = mysql.createConnection('localhost', 'test', '650314', 'my_db')
+    var Connection = new Mysql('localhost', 'test', '650314', 'my_db')
 
-    console.log('数据库连接成功！')
+    await initCityData(Connection)
 
-    await initCityData(connection)
+    await initUserData(Connection)
 
-    await initUserData(connection)
+    await initRouteData(Connection)
 
-    await initRouteData(connection)
+    await initSightData(Connection)
 
-    await initSightData(connection)
-
-    //   connection.end();
+   // connection.end();
 }
 main()
