@@ -4,15 +4,17 @@
  */
 
 var fs = require('fs');
-var getSights = require('./getSightData');
+var schedule = require('node-schedule')
+var getSights = require('./getSightData')
+var updateSights = require('./updateSightData')
 
 module.exports = async function (connection) {
 
     var data = fs.readFileSync(__dirname + '/../baiduSights.json', 'utf8');
-    if (!data) {
-        getSights();
-        data = fs.readFileSync(__dirname + '/../baiduSights.json', 'utf8');
-    }
+    // if (!data) {
+    //     getSights();
+    //     data = fs.readFileSync(__dirname + '/../baiduSights.json', 'utf8');
+    // }
     data = data.replace(/\]\[/g, function () {
         return ','
     })
@@ -37,14 +39,15 @@ module.exports = async function (connection) {
                     PRIMARY KEY(sight_id)
                     )ENGINE=InnoDB DEFAULT CHARSET=utf8;`;
     console.log('初始化景点信息...');
+
     await new Promise((resolve, reject) => {
-        connection.query(createSightsTable, function (err, results, fields) {
+        connection.Connection.query(createSightsTable, function (err, results, fields) {
             if (err) {
                 console.log(err.message);
             }
             data.forEach(function (item, index) {
                 let info = item['ext']['detail_info'] ? JSON.parse(JSON.stringify(item['ext']['detail_info'])) : ''
-                connection.query('insert ignore into sight_data set ?',
+                connection.insertData(
                     {
                         'name': item['name'],
                         'std_tag': item['std_tag'],
@@ -60,18 +63,30 @@ module.exports = async function (connection) {
                         'tag': info ? info['tag'] : '',
                         'brief_ticket': info ? JSON.stringify(info['brief_ticket']) : '',
                         'mapsearchaladdin': info ? JSON.stringify(info['mapsearchaladdin']) : ''
-                    }
-                    , function (error, results, fields) {
+                    },
+                    'sight_data',
+                    function (error, result) {
                         if (error) throw error;
-                        // console.log('The solution is: ', results);
-                        if (index == data.length-1) {
+                        if (index == data.length - 1) {
                             resolve()
                         }
-                    });
+                    }
+                )
             })
         });
     })
         .then(() => {
             console.log('初始化景点信息完成')
+            console.log('每天8:00开始，每隔30分钟更新景点数据')
+            var j = schedule.scheduleJob(
+                '1 * * * *',
+                // 执行定时任务
+                function () {
+                    updateSights(connection)
+                }
+            )
+        })
+        .catch((error) => {
+            console.error(error);
         })
 }

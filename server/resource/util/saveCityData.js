@@ -20,14 +20,21 @@ module.exports = async function (connection) {
                     )ENGINE=InnoDB DEFAULT CHARSET=utf8;`;
     console.log('初始化城市信息...')
     await new Promise((resolve, reject) => {
-        connection.query(createCitysTable, function (err, results, fields) {
+        connection.Connection.query(createCitysTable, function (err, results, fields) {
             if (err) {
                 console.log(err.message);
             }
             city_data.forEach(function (item, index) {
-                connection.query('insert ignore into city_data set ?',
-                    { 'province': item['province'], 'name': item['name'], 'pointX': item['pointX'], 'pointY': item['pointY'], 'station': JSON.stringify(item['station']) }
-                    , function (error, results, fields) {
+                connection.insertData(
+                    { 
+                        'province': item['province'], 
+                        'name': item['name'], 
+                        'pointX': item['pointX'], 
+                        'pointY': item['pointY'], 
+                        'station': JSON.stringify(item['station']) 
+                    },
+                    'city_data',
+                    function (error, results) {
                         if (error) throw error;
                         // console.log('The solution is: ', results);
                         if (index == city_data.length - 1) {
@@ -39,5 +46,7 @@ module.exports = async function (connection) {
     })
         .then(() => {
             console.log('初始化城市信息完成')
+        }).catch((error) => {
+            console.error(error);
         })
 }
