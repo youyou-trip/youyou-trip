@@ -1,7 +1,15 @@
 
 export default {
   'SAVE': (({commit}, obj) => {
-    console.log(obj)
     commit('SAVE', obj)
+  }),
+  'User': (({commit}, obj) => {
+    commit('setUser', obj)
+  }),
+  'City':(({commit},obj)=>{
+  	commit('setCity',obj)
+  }),
+  'deleteCity':(({commit},obj)=>{
+  	commit('deleteCity',obj)
   })
 }

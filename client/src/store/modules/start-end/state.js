@@ -1,4 +1,6 @@
 export default {
   start: '',
-  end: ''
+  end: '',
+  user: '',
+  city:[]
 }

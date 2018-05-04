@@ -34,6 +34,7 @@ export default {
       })
         .then(res => {
           if (res.data === 1) {
+            this.$store.dispatch('User', this.user_id)
             window.localStorage.setItem('user_id', this.user_id)
             this.$router.push('/')
           }

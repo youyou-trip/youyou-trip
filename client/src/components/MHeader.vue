@@ -23,15 +23,21 @@
 </template>
 
 <script>
-window.addEventListener('storage', function (e) {
-    this.user = window.localStorage.getItem('user_id');
-    console.log(this.user);
-})
     export default {
         data () {
             return {
                 theme1: 'light',
-                user:'user'
+                user: this.$store.getters.getUser ? this.$store.getters.getUser : window.localStorage.getItem('user_id')
+            }
+        },
+        computed: {
+            getUser() {
+                return this.$store.getters.getUser;
+            }
+        },
+        watch: {
+            getUser(val) {
+                this.user = val;
             }
         }
     }

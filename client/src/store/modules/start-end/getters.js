@@ -4,5 +4,11 @@ export default {
   },
   getEnd (state) {
     return state.end
+  },
+  getUser(state) {
+  	return state.user
+  },
+  getCity(state) {
+  	return state.city
   }
 }

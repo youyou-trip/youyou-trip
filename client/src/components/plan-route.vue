@@ -2,11 +2,11 @@
   <div class="plan-route">
     <div class="canvas">
       <div class="myCanvas-wrapper">
-        <myCanvas :lists="drawCities">绘制地图</myCanvas>
+        <myCanvas>您的浏览器不支持Canvas</myCanvas>
       </div>
       <div class="cities">
         <ul>
-          <li v-for="city in cities" :data-id="city.city_id" :key="city.id" @click="toggleCity($event)">
+          <li v-for="city in cities" :data-id="city.city_id" :data-X="city.pointX" :data-Y="city.pointY" :key="city.id" @click="toggleCity($event)">
             <p>{{city.name}}</p>
           </li>
         </ul>
@@ -26,8 +26,7 @@ import myCanvas from '@/components/myCanvas.vue'
 export default {
   data () {
     return {
-      add: true,
-      drawCities: [],
+      City: this.$store.getters.getCity,
       cities: [],
       sights: [],
       hotSightsStart: 0,
@@ -43,11 +42,6 @@ export default {
       .then(res => {
         if (res.data.error === 1) {
           this.cities = res.data.cityInfo
-          this.cities.forEach(item => {
-            if (item['name'] === this.start || item['name'] === this.end) {
-              this.drawCities[item['city_id']] = JSON.parse(JSON.stringify(item))
-            }
-          })
         }
       })
     fetch({
@@ -60,39 +54,31 @@ export default {
         }
       })
   },
-  computed: {
-    addOrSub: function () {
-      console.log(this.add)
-      return {
-        add: this.add,
-        sub: !this.add
-      }
-    }
-  },
   methods: {
     toggleCity (e) {
-      let targetId, targetName
+      let targetId, targetName,X,Y,sub
        if (e.target.nodeName === 'P') {
         targetId = e.target.parentNode.getAttribute('data-id')
+        X = e.target.parentNode.getAttribute('data-X')
+        Y = e.target.parentNode.getAttribute('data-Y')
+        sub =e.target.parentNode.getAttribute('data-Sub')
         targetName = e.target.innerHTML
       } else if (e.target.nodeName === 'LI') {
         targetId = e.target.getAttribute('data-id')
+        X = e.target.getAttribute('data-X')
+        Y = e.target.getAttribute('data-Y')
+        sub =e.target.getAttribute('data-Sub')
         targetName = e.target.childNode.innerHTML
       }
-      if (!this.drawCities[targetId]) {
-        this.cities.forEach(item => {
-          if (item['city_id'] == targetId) {
-            this.drawCities[targetId] = JSON.parse(JSON.stringify(item))
-            e.target.className += 'sub'
-            console.log(e.target.className)
-          }
-        })
-      } else if (targetName !== this.start && targetName !== this.end){
-        this.drawCities[targetId] = null
-        e.target.className -= 'sub'
+      if(sub==="true"){
+        e.target.className = ''
+        e.target.parentNode.setAttribute("data-sub","false")
+        this.$store.dispatch('deleteCity', {name:targetName, X:X,Y:Y})
+      }else{
+        this.$store.dispatch('City', {name:targetName, X:X,Y:Y})
+        e.target.className += 'sub'
+        e.target.parentNode.setAttribute("data-sub","true")
       }
-      this.add = !this.add
-      console.log(this.drawCities)
     }
   },
   components: {
@@ -107,7 +93,7 @@ export default {
   .canvas
     flex: 3
     .myCanvas-wrapper
-      height: 30rem
+      height: 36rem
     .cities
       ul
         li

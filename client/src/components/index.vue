@@ -6,11 +6,15 @@
           </div>
           <div class="box">
             <div class="start">
-              <Input v-model="start" placeholder="起点" style="width: 250px"></Input>
+              <Select v-model="start" style="width:200px">
+                  <Option v-for="item in cityList" :value="item.name">{{ item.name }}</Option>
+              </Select>
             </div>
             <Icon type="android-send"></Icon>
             <div class="end">
-              <Input v-model="end" placeholder="终点" style="width: 250px"></Input>
+              <Select v-model="end" style="width:200px">
+                <Option v-for="item in cityList" :value="item.name">{{ item.name }}</Option>
+              </Select>
             </div>
           </div>
           <Button @click="submit" type="success">确定</Button>
@@ -43,6 +47,8 @@ export default {
     return {
       start: '',
       end: '',
+      cityList:'',
+      City:this.$store.getters.getCity,
       hotsights: [],
       hotSightsStart: 0,
       value3: 0,
@@ -70,7 +76,7 @@ export default {
     url: 'http://localhost:3000/get-cities?province=陕西',
     })
       .then(res => {
-        // this.$refs.hot_sights.innerHTML += JSON.stringify(res)
+        this.cityList = res.data.cityInfo
       })
   },
   methods: {
@@ -91,6 +97,14 @@ export default {
         window.localStorage.setItem('start', this.start)
         window.localStorage.setItem('end', this.end)
         this.$store.dispatch('SAVE', {start: this.start, end: this.end})
+        this.cityList.forEach(item => {
+          if (item['name'] == this.start) {
+            this.$store.dispatch('City',{name:this.start,X:Number(item.pointX),Y:Number(item.pointY)})
+          }
+          else if(item['name'] == this.end){
+            this.$store.dispatch('City',{name:this.end,X:Number(item.pointX),Y:Number(item.pointY)})
+          }
+        })
     }
   }
 }
