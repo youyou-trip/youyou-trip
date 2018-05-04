@@ -6,7 +6,7 @@ var signup = async function(req, res, Connection){
     let id = req.body.id
     let userName = req.body.name
     let psd = req.body.password
-    let result = await Connection.selectData(['name'], { id: id }, 'user_data', true)
+    let result = await Connection.selectData(['name'], { user_id: id }, 'user_data', true)
     if (result.length >= 1) {
         res.send('0')
     } else {
@@ -16,10 +16,10 @@ var signup = async function(req, res, Connection){
         })
         Connection.insertData(
             { 
-                id: id, 
+                user_id: id, 
                 name: userName, 
                 password: psd, 
-                tag: JSON.stringify(json)
+                tags: JSON.stringify(json)
             }, 'user_data')
         console.log('用户：' + id + '注册成功')
         res.send('1')

@@ -17,7 +17,7 @@ var getHotSights = async function (req, res, Connection) {
     tags = JSON.parse(tags['tags'])
     let tuijian = [], count = 0
     for (let key in tags) {
-        if(Number(tags[key]) > 1) {
+        if (Number(tags[key]) > 1) {
             count += Number(tags[key])
             tuijian.push({
                 name: key,
@@ -25,21 +25,23 @@ var getHotSights = async function (req, res, Connection) {
             })
         }
     }
-    
     let hotSights = []
-    tuijian.forEach(async (item, index) => {
-        let s = await Connection.selectTopData(item.name, 0, parseInt(item.value/count*10), 'sight_data')
-        if(s.length >= 1){
-            hotSights = hotSights.concat(s)
-        }
-            
-        if (index == tuijian.length - 1) {
-          //  console.log(hotSights)
-            res.send({ error: 1, hotSights: hotSights })
-        } else if (index > tuijian.length-1) {
-            res.send({error: 0})
-        }
-    })
+    if (tuijian.length != 0) {
+        tuijian.forEach(async (item, index) => {
+            let s = await Connection.selectTopData(item.name, hotSightsStart, parseInt(item.value / count * 10), 'sight_data')
+            if (s.length >= 1) {
+                hotSights = hotSights.concat(s)
+            }
+            if (index == tuijian.length - 1) {
+                res.send({ error: 1, hotSights: hotSights })
+            } else if (index > tuijian.length - 1) {
+                res.send({ error: 0 })
+            }
+        })
+    } else {
+        let hotSights = await Connection.selectTopData('景区', hotSightsStart, 10, 'sight_data')
+        res.send({ error: 1, hotSights: hotSights })
+    }
 }
 
 module.exports = getHotSights
