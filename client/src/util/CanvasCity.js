@@ -8,6 +8,14 @@ function city(name,X,Y){
 	this.Y=Y;
 }
 
+function copyArr(arr) {
+    let res = []
+    for (let i = 0; i < arr.length; i++) {
+     res.push(arr[i])
+    }
+    return res
+}
+
 function compare(property){
 	return function(obj1,obj2){
      var value1 = obj1[property];
@@ -25,7 +33,7 @@ function Sumr (arr){
 
 function sortXY(D){
 	let canvasX = 900;
-	let canvasY = 440;
+	let canvasY = 420;
 
 	//计算X等比例值
 	let Dt = D.sort(compare("X"));
@@ -64,13 +72,14 @@ function sortXY(D){
 
 function CanvasCity(D) {
 	let  len = D.length;
+	var Dt = copyArr(D);
 	if(len>2){
-		return sortXY(D);
+		return sortXY(Dt);
 	}else{
-		let Dt = D.sort(compare("X"));
-		Dt[0].X=300;
+		Dt.sort(compare("X"));
+		Dt[0].X=250;
 		Dt[0].Y=244;
-		Dt[1].X=800;
+		Dt[1].X=750;
 		Dt[1].Y=244;
 		return Dt;
 	}

@@ -63,14 +63,14 @@ export default {
     }
   },
   mounted () {
-    fetch({
-      method: 'get',
-      url: 'http://localhost:3000/hot-sights?hotSightsStart=' + this.hotSightsStart,
-    })
-      .then(res => {
-        // this.$refs.hot_sights.innerHTML += JSON.stringify(res)
-        this.hotsights = res.data.hotSights
-      })
+    // fetch({
+    //   method: 'get',
+    //   url: 'http://localhost:3000/hot-sights?hotSightsStart=' + this.hotSightsStart,
+    // })
+    //   .then(res => {
+    //     // this.$refs.hot_sights.innerHTML += JSON.stringify(res)
+    //     this.hotsights = res.data.hotSights
+    //   })
     fetch({
     method: 'get',
     url: 'http://localhost:3000/get-cities?province=陕西',
