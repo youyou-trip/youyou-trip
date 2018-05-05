@@ -1,11 +1,11 @@
 /**
  * 存储路线信息
  */
-var fs = require('fs');
-
 module.exports = async function (connection) {
 
-    let createRouteTable = `create table if not exists route_data(
+    let createRouteTable = `
+                    DROP TABLE IF EXISTS route_data;
+                    create table route_data(
                     route_id VARCHAR(20) NOT NULL,
                     user_id VARCHAR(100) NOT NULL,
                     date DATE NOT NULL,

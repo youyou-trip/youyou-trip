@@ -1,17 +1,18 @@
-/**
- * 获取车次信息
- */
-
-var jwt = require('jsonwebtoken')
-var fs = require('fs')
+var express = require('express');
+var router = express.Router();
+var Mysql = require('../sqlTool');
 var pinyin = require('node-pinyin')
 var request = require('superagent')
-require('superagent-charset')(request)
 var cheerio = require('cheerio')
+require('superagent-charset')(request)
 
-const key = fs.readFileSync(__dirname + '/primate.key')
+var models = require('../config');
+// 连接数据库
+var Connection = new Mysql(models.db);
 
-var getTrains = async function (req, res, Connection) {
+
+// 增加用户接口
+router.get('/', async (req, res) => {
     let start = req.query.start
     let end = req.query.end
 
@@ -47,6 +48,6 @@ var getTrains = async function (req, res, Connection) {
             }
             res.send({ error: 1, trains: { col: col, value: value } })
         });
-}
+});
 
-module.exports = getTrains
+module.exports = router;
