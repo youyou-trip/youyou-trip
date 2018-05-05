@@ -34,7 +34,7 @@ export default {
       if (this.user_id && this.name && this.psd) {
         fetch({
           method: "post",
-          url: "http://localhost:3000/signin",
+          url: "http://localhost:3000/user/signin",
           data: {
             id: this.user_id,
             name: this.name,

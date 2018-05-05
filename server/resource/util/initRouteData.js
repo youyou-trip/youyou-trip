@@ -4,8 +4,7 @@
 module.exports = async function (connection) {
 
     let createRouteTable = `
-                    DROP TABLE IF EXISTS route_data;
-                    create table route_data(
+                    create table if not exists route_data(
                     route_id VARCHAR(20) NOT NULL,
                     user_id VARCHAR(100) NOT NULL,
                     date DATE NOT NULL,

@@ -21,14 +21,13 @@ module.exports = async function (connection) {
 
     data = JSON.parse(data)
     let createSightsTable = `
-                    DROP TABLE IF EXISTS sight_data;
-                    create table sight_data(
+                    create table if not exists sight_data(
                     sight_id INTEGER NOT NULL AUTO_INCREMENT,
                     name VARCHAR(100) NOT NULL,
                     std_tag VARCHAR(100),
                     addr VARCHAR(1000),
                     area_name VARCHAR(1000),
-                    diPointX VARCHAR(50), 
+                    diPointX VARCHAR(50),
                     diPointY VARCHAR(50),
                     overall_rating VARCHAR(5),
                     comment_num INTEGER,

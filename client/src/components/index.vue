@@ -77,16 +77,17 @@ export default {
     })
       .then(res => {
         if(res.data.loginState){
+          console.log("login");
           this.$store.dispatch('User', res.data.username)
           window.localStorage.setItem('user_id', res.data.username)
         }else{
           //弹窗
-
+          alert("1");
         }
       })
     fetch({
     method: 'get',
-    url: 'http://localhost:3000/get-cities?province=陕西',
+    url: 'http://localhost:3000/city/all?province=陕西',
     })
       .then(res => {
         this.cityList = res.data.cityInfo
@@ -96,7 +97,7 @@ export default {
     submit () {
         fetch({
           method: 'post',
-          url: 'http://localhost:3000/start-end',
+          url: 'http://localhost:3000/route/start-end',
           data: {
             start: this.start,
             end: this.end

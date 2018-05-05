@@ -37,7 +37,7 @@ export default {
   mounted () {
     fetch({
       method: 'get',
-      url: 'http://localhost:3000/get-cities?province=陕西'
+      url: 'http://localhost:3000/city/all?province=陕西'
     })
       .then(res => {
         if (res.data.error === 1) {
@@ -46,7 +46,7 @@ export default {
       })
     fetch({
       method: 'get',
-      url: 'http://localhost:3000/hot-sights?hotSightsStart=' + this.hotSightsStart
+      url: 'http://localhost:3000/sight/hot?hotSightsStart=' + this.hotSightsStart
     })
       .then(res => {
         if (res.data.error === 1) {

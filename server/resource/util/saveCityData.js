@@ -10,8 +10,7 @@ module.exports = async function (connection) {
     var city_data = fs.readFileSync(__dirname + '/../city-info.json', 'utf8');
     city_data = JSON.parse(city_data)
     let createCitysTable = `
-                    DROP TABLE IF EXISTS city_data;
-                    create table city_data(
+                    create table if not exists city_data(
                     city_id INTEGER NOT NULL AUTO_INCREMENT,
                     province VARCHAR(100) NOT NULL,
                     name VARCHAR(100) NOT NULL,
@@ -27,6 +26,11 @@ module.exports = async function (connection) {
                 console.log(err.message);
             }
             city_data.forEach(function (item, index) {
+                if(item['pointX'].length < 9){
+                    for(let i = item['pointX'].length; i < 9; i++){
+                        item['pointX'] += '0'
+                    }
+                }
                 connection.insertData(
                     { 
                         'province': item['province'], 

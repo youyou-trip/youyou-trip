@@ -26,7 +26,7 @@ export default {
     login () {
       fetch({
         method: 'post',
-        url: 'http://localhost:3000/login',
+        url: 'http://localhost:3000/user/login',
         data: {
           id: this.user_id,
           password: this.psd

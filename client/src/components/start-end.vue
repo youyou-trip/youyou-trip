@@ -33,14 +33,14 @@ export default {
   mounted () {
     fetch({
       method: 'get',
-      url: 'http://localhost:3000/hot-sights?hotSightsStart=' + this.hotSightsStart,
+      url: 'http://localhost:3000/sight/hot?hotSightsStart=' + this.hotSightsStart,
     })
       .then(res => {
         // this.$refs.hot_sights.innerHTML += JSON.stringify(res)
       })
     fetch({
     method: 'get',
-    url: 'http://localhost:3000/get-cities?province=陕西',
+    url: 'http://localhost:3000/city/all?province=陕西',
     })
       .then(res => {
         // this.$refs.hot_sights.innerHTML += JSON.stringify(res)
@@ -50,7 +50,7 @@ export default {
     submit () {
         fetch({
           method: 'post',
-          url: 'http://localhost:3000/start-end',
+          url: 'http://localhost:3000/route/start-end',
           data: {
             start: this.start,
             end: this.end

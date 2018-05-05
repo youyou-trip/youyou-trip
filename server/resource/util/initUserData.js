@@ -1,10 +1,9 @@
-var config = require('../../config/config')
+var config = require('../../config')
 
 module.exports = async function (connection) {
 
     let createUserTable = `
-                    DROP TABLE IF EXISTS user_data;
-                    create table user_data(
+                    create table if not exists user_data(
                     user_id VARCHAR(100) NOT NULL,
                     name VARCHAR(100) NOT NULL,
                     password VARCHAR(100) NOT NULL,
