@@ -1,8 +1,10 @@
-var fs = require('fs');
-var type = JSON.parse(fs.readFileSync(__dirname + '/../sights-type.json', 'utf8'))
+var config = require('../../config/config')
+
 module.exports = async function (connection) {
 
-    let createUserTable = `create table if not exists user_data(
+    let createUserTable = `
+                    DROP TABLE IF EXISTS user_data;
+                    create table user_data(
                     user_id VARCHAR(100) NOT NULL,
                     name VARCHAR(100) NOT NULL,
                     password VARCHAR(100) NOT NULL,
@@ -15,19 +17,12 @@ module.exports = async function (connection) {
             if (err) {
                 console.log(err.message);
             }
-            let json = {}
-            type.forEach((item) => {
-                json[item] = 1
+            config.user.forEach((item) => {
+                connection.insertData(
+                    item,
+                    'user_data'
+                )
             })
-            connection.insertData(
-                {
-                    user_id: '04141105',
-                    name: 'lijunyi',
-                    password: '650314',
-                    tags: JSON.stringify(json)
-                },
-                'user_data'
-            )
             resolve()
         });
     })

@@ -9,15 +9,14 @@ var mysql = require('mysql');
  */
 
 class Tools {
-    constructor(host, user, password, dataBase) {
+    constructor(obj) {
         this.Connection = mysql.createConnection({
-            host: host,
-            user: user,
-            password: password,
-            database: dataBase
+            host: obj.host,
+            user: obj.user,
+            password: obj.password,
+            database: obj.database
         })
         this.Connection.connect()
-        console.log('数据库连接成功！')
     }
 
     /**

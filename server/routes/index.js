@@ -1,75 +1,30 @@
 /**
- * 服务器端路由
+ * Created by qianqing on 2017/2/13.
  */
-
-var express = require('express')
+const express = require('express');
 var jwt = require('jsonwebtoken')
+const router = express.Router();
+const Mysql = require('../sqlTool')
+const config = require('../config')
 var fs = require('fs')
-var router = express.Router()
+const key = fs.readFileSync(__dirname + '/../lib/primate.key')
+const type = JSON.parse(fs.readFileSync(__dirname + '/../resource/sights-type.json', 'utf8'))
+var Connection = new Mysql(config.db)
 
-var login = require('./login')
-var signup = require('./signup')
-var getSights = require('./get-sights')
-var getCities = require('./get-cities')
-var hot_sights = require('./get-hotSights')
-var start_end = require('./start-end')
-var save_cityRoute = require('./save-cityRoute')
-var save_sightRoute = require('./save-sightsRoute')
-var getTrains = require('./get-trains')
-var mine = require('./mine')
 
-var Mysql = require('../sqlTool')
-const key = fs.readFileSync(__dirname + '/primate.key')
+router.get('/', async function (req, res) {
+  if (req.cookies && req.cookies.token) {
+    let user_id = jwt.verify(req.cookies.token, key).user_id
+    let username = (await Connection.selectData(
+      ['name'],
+      { user_id: user_id },
+      'user_data',
+      true))[0]
 
-var Connection = new Mysql('localhost', 'test', '650314', 'my_db')
-
-router.get('/', function(req, res) {
-    if(req.cookies && req.cookies.token) {
-        let user_id = jwt.verify(req.cookies.token, key).user_id
-        res.json({loginState: true, user_id: user_id})
-    }else{
-        res.json({loginState: false})
-    }
-})
-
-router.post('/login', (req, res) => {
-    login(req, res, Connection)
-})
-
-router.post('/signin', (req, res) => {
-    signup(req, res, Connection)
-})
-
-router.get('/sights', (req, res) => {
-    getSights(req, res, Connection)
-})
-
-router.get('/hot-sights', (req, res) => {
-    hot_sights(req, res, Connection)
-})
-
-router.post('/start-end', (req, res) => {
-    start_end(req, res, Connection)
-})
-
-router.post('/save-cityRoute', (req, res) => {
-    save_cityRoute(req, res, Connection)
-})
-
-router.post('/save-sightRoute', (req, res) => {
-    save_sightRoute(req, res, Connection)
-})
-
-router.get('/get-trains', (req, res) => {
-    getTrains(req, res, Connection)
-})
-
-router.get('/mine', (req, res) => {
-    mine(req, res, Connection)
-})
-
-router.get('/get-cities', (req, res) => {
-    getCities(req, res, Connection)
+    res.json({ loginState: true, username: username['name'] })
+  } else {
+    res.json({ loginState: false })
+  }
 })
 
 module.exports = router
