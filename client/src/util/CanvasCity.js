@@ -9,11 +9,13 @@ function city(name,X,Y){
 }
 
 function copyArr(arr) {
-    let res = []
-    for (let i = 0; i < arr.length; i++) {
-     res.push(arr[i])
-    }
-    return res
+   return arr.map((e)=>{
+        if(typeof e==='object'){
+           return Object.assign({},e);
+         }else{
+           return e;
+       }
+    })
 }
 
 function compare(property){
@@ -70,7 +72,8 @@ function sortXY(D){
 	return Dt;
 }
 
-function CanvasCity(D) {
+export function CanvasCity(D) {
+	console.log(D);
 	let  len = D.length;
 	var Dt = copyArr(D);
 	if(len>2){
@@ -84,4 +87,3 @@ function CanvasCity(D) {
 		return Dt;
 	}
 }
-module.exports = CanvasCity
