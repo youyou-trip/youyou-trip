@@ -35,39 +35,64 @@ function Sumr (arr){
 
 function sortXY(D){
 	let canvasX = 900;
-	let canvasY = 420;
+	let canvasY = 400;
 
 	//计算X等比例值
 	let Dt = D.sort(compare("X"));
-	let Darr = [];
-	for(let i = 0; i < Dt.length-1; i ++){
-		Darr.push(D[i + 1].X - D[i].X);
-		if(i > 0){
-			Darr[i] = Number((Darr[i]/Darr[0])*10);
-		}
-	}
-	Darr[0] = 10;
-	let section = canvasX/Sumr(Darr);
-	Dt[0].X = 50;
-	for(let i = 1;i < Dt.length; i++){
-		Dt[i].X = 50 + Darr[i-1]*section;
-	}
+	let Xdistance = Dt[Dt.length-1].X- Dt[0].X;
+	let minX = Dt[0].X;
+	console.log(Xdistance +" "+ minX);
 
-	//计算Y等比例值
 	Dt = Dt.sort(compare("Y"));
-	Darr = [];
-	for(let i = 0; i < Dt.length-1; i ++){
-		Darr.push(D[i + 1].Y - D[i].Y);
-		if(i > 0){
-			Darr[i] = Number((Darr[i]/Darr[0])*10);
+	let Ydistance = Dt[Dt.length-1].Y- Dt[0].Y;
+	let minY = Dt[0].Y;
+	console.log(Ydistance + " "+minY);
+
+	if(2 * Ydistance < Xdistance){
+		let section = Xdistance/canvasX;
+		console.log(section + "X");
+		for(let i = 0;i < Dt.length; i++){
+			Dt[i].X =  Number(50+(Dt[i].X-minX)/section);
+			Dt[i].Y =  Number(450-(Dt[i].Y-minY)/section);
+		}
+	}else{
+		let section = Ydistance/canvasY;
+		console.log(section + "Y");
+		for(let i = 0;i < Dt.length; i++){
+			Dt[i].X =  Number(50+(Dt[i].X-minX)/section);
+			Dt[i].Y =  Number(450-(Dt[i].Y-minY)/section);
 		}
 	}
-	Darr[0] = 10;
-	section = canvasY/Sumr(Darr);
-	Dt[0].Y = 30;
-	for(let i = 1;i < Dt.length; i++){
-		Dt[i].Y = 30 + Darr[i-1]*section;
-	}
+	// let Darr = [];
+	// for(let i = 0; i < Dt.length-1; i ++){
+	// 	Darr.push(D[i + 1].X - D[i].X);
+	// 	if(i > 0){
+	// 		Darr[i] = Number((Darr[i]/Darr[0])*10);
+	// 	}
+	// }
+	// Darr[0] = 10;
+	// let section = canvasX/Sumr(Darr);
+	// console.log(section+" X");
+	// Dt[0].X = 50;
+	// for(let i = 1;i < Dt.length; i++){
+	// 	Dt[i].X = 50 + Darr[i-1]*section;
+	// }
+
+	// //计算Y等比例值
+	// Dt = Dt.sort(compare("Y"));
+	// Darr = [];
+	// for(let i = 0; i < Dt.length-1; i ++){
+	// 	Darr.push(D[i + 1].Y - D[i].Y);
+	// 	if(i > 0){
+	// 		Darr[i] = Number((Darr[i]/Darr[0])*10);
+	// 	}
+	// }
+	// Darr[0] = 10;
+	// section = canvasY/Sumr(Darr);
+	// Dt[0].Y = 40;
+	// for(let i = 1;i < Dt.length; i++){
+	// 	Dt[i].Y = 30 + Darr[i-1]*section;
+	// }
 
 	return Dt;
 }

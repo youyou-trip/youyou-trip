@@ -37,28 +37,19 @@ export default {
     rander(city,x,y,tmp){ //画圆
       let canvas =document.querySelector('#myCanvas');
       let ctx = canvas.getContext('2d');
-      if(tmp >= 2 * Math.PI){
-        return
-      }else{
-        tmp += 2 * (Math.PI / 180)
-      }
       //画圈
-      let r=35
+      let r=2;
       ctx.beginPath();
       ctx.lineWidth = 1;
       ctx.strokeStyle = '#1c86d1';
-      ctx.arc(x, y, r, 0, tmp);
+      ctx.arc(x, y, r, 2 * Math.PI, tmp);
       ctx.stroke();
       ctx.closePath();
       //写字
       ctx.fillStyle = '#1d89d5';
       ctx.font= 12 + 'px Microsoft Yahei';
       ctx.textAlign='center';
-      ctx.fillText(city, x, y+5);
-      let self = this;
-      window.requestAnimationFrame(function () {
-        self.rander(city,x,y,tmp)
-      })
+      ctx.fillText(city, x, y-5);
     }
   },
   mounted () {

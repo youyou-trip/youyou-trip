@@ -72,6 +72,19 @@ export default {
     //     this.hotsights = res.data.hotSights
     //   })
     fetch({
+      method: 'get',
+      url: 'http://localhost:3000/'
+    })
+      .then(res => {
+        if(res.data.loginState){
+          this.$store.dispatch('User', res.data.username)
+          window.localStorage.setItem('user_id', res.data.username)
+        }else{
+          //弹窗
+
+        }
+      })
+    fetch({
     method: 'get',
     url: 'http://localhost:3000/get-cities?province=陕西',
     })

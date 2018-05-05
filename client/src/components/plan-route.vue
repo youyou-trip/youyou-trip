@@ -73,9 +73,9 @@ export default {
       if(sub==="true"){
         e.target.className = ''
         e.target.parentNode.setAttribute("data-sub","false")
-        this.$store.dispatch('deleteCity', {name:targetName, X:X,Y:Y})
+        this.$store.dispatch('deleteCity', {name:targetName, X:Number(X),Y:Number(Y)})
       }else{
-        this.$store.dispatch('City', {name:targetName, X:X,Y:Y})
+        this.$store.dispatch('City', {name:targetName, X:Number(X),Y:Number(Y)})
         e.target.className += 'sub'
         e.target.parentNode.setAttribute("data-sub","true")
       }
