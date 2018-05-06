@@ -12,13 +12,19 @@ var Connection = new Mysql(models.db);
 
 // 增加用户接口
 router.get('/mine', async function (req, res, next) {
-    let user_id = jwt.verify(req.cookies.token, key).user_id
-    if (!mine) {
+    let token = jwt.verify(req.cookies.token, key)
+    if (token.login) {
+        let user_id = jwt.verify(req.cookies.token, key).user_id
+        if (!mine) {
+            res.send('0')
+            return
+        }
+        let userData = await Connection.selectData(['name', 'detailInfo'], { id: user_id }, 'user_data', true)
+        res.send(userData)
+    } else {
         res.send('0')
-        return
     }
-    let userData = await Connection.selectData(['name', 'detailInfo'], { id: user_id }, 'user_data', true)
-    res.send(userData)
+    
 });
 
 
