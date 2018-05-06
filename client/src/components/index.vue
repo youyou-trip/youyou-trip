@@ -1,4 +1,5 @@
 <template>
+  <div>
     <Row>
         <Col class="way" span="16">
           <div class="title">
@@ -21,30 +22,32 @@
         </Col>
         <Col span="8">
           <div class="hot" ref="hot_sights">
-            <Carousel
-                v-model="value3"
-                :autoplay="setting.autoplay"
-                :autoplay-speed="setting.autoplaySpeed"
-                :dots="setting.dots"
-                :radius-dot="setting.radiusDot"
-                :trigger="setting.trigger"
-                :arrow="setting.arrow">
-                <CarouselItem v-for="(hot, index) in hotsights" v-bind:key="index">
-                    <img v-bind:src="hot.image" alt="图片"/>
-                    <div class="demo-caroussel">{{hot.name}}</div>
-                </CarouselItem>
-            </Carousel>
+              <div v-for="(hot, index) in hotsights" v-bind:key="index" class="demo-caroussel">{{hot.name}}</div>
           </div>
         </Col>
     </Row>
+    <Row class="loginer" id="login">
+      <Col span = "24" class="login_box">
+          <div class="title">
+            <div @click="login" v-bind:class="{active:active}">登陆</div>
+            <div @click="sigin" v-bind:class="{active:!active}">注册</div>
+          </div>
+          <login v-if="active"></login>
+          <sigin v-if="!active"></sigin>
+      </Col>
+    </Row>
+  </div>
 </template>
 
 <script>
 import fetch from '@/util/fetch'
+import login from './login.vue'
+import sigin from './sigin.vue'
 
 export default {
   data () {
     return {
+      active: true,
       start: '',
       end: '',
       cityList:'',
@@ -62,27 +65,29 @@ export default {
       }
     }
   },
+  components: {
+    login: login,
+    sigin: sigin
+  },
   mounted () {
-    // fetch({
-    //   method: 'get',
-    //   url: 'http://localhost:3000/hot-sights?hotSightsStart=' + this.hotSightsStart,
-    // })
-    //   .then(res => {
-    //     // this.$refs.hot_sights.innerHTML += JSON.stringify(res)
-    //     this.hotsights = res.data.hotSights
-    //   })
+    fetch({
+      method: 'get',
+      url: 'http://localhost:3000/sight/hot?hotSightsStart=' + this.hotSightsStart,
+    })
+      .then(res => {
+        this.hotsights = res.data.hotSights
+      })
     fetch({
       method: 'get',
       url: 'http://localhost:3000/'
     })
       .then(res => {
         if(res.data.loginState){
-          console.log("login");
           this.$store.dispatch('User', res.data.username)
           window.localStorage.setItem('user_id', res.data.username)
-        }else{
-          //弹窗
-          alert("1");
+        }else{//弹窗
+          var login = document.querySelector("#login");
+          login.style.display = "block";
         }
       })
     fetch({
@@ -94,6 +99,12 @@ export default {
       })
   },
   methods: {
+    login () {
+      this.active = true
+    },
+    sigin () {
+      this.active = false
+    },
     submit () {
         fetch({
           method: 'post',
@@ -111,11 +122,16 @@ export default {
         window.localStorage.setItem('start', this.start)
         window.localStorage.setItem('end', this.end)
         this.$store.dispatch('SAVE', {start: this.start, end: this.end})
+        this.$store.dispatch('ClearCity',{})
         this.cityList.forEach(item => {
           if (item['name'] == this.start) {
+            window.localStorage.setItem('startX', Number(item.pointX))
+            window.localStorage.setItem('startY', Number(item.pointY))
             this.$store.dispatch('City',{name:this.start,X:Number(item.pointX),Y:Number(item.pointY)})
           }
           else if(item['name'] == this.end){
+            window.localStorage.setItem('endX', Number(item.pointX))
+            window.localStorage.setItem('endY', Number(item.pointY))
             this.$store.dispatch('City',{name:this.end,X:Number(item.pointX),Y:Number(item.pointY)})
           }
         })
@@ -139,4 +155,41 @@ export default {
     width:25%
 img
   width:30%
+.loginer
+  display:none
+  z-index:10
+  position:fixed
+  background-color:rgba(0,0,0,.8)
+  top:0
+  bottom:0
+  left:0
+  right:0
+  width:100%
+  height:100%
+  .login_box
+    position:fixed
+    top:0
+    bottom:0
+    left:0
+    right:0
+    margin:auto
+    width:350px
+    height:350px
+    border-radius:20px
+    background-color:#fff
+    .title
+      display: flex
+      justify-content: center
+      padding: 50px 20px
+      font-size: 1.2rem
+      color: lightness
+      text-align: center
+      div
+        flex: 1
+        cursor: pointer
+      .active
+        background:#42b983
+        border-radius:5px
+//   .hiden
+//     display: none
 </style>

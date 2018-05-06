@@ -1,53 +1,62 @@
 <template>
-  <div class="index">
-    <div class="title">
-      <div @click="login" v-bind:class="{active:active}">登陆</div>
-      <div @click="sigin" v-bind:class="{active:!active}">注册</div>
+  <div class="user">
+    <ul class="message_box">
+      <li v-for="item in message" class="message">
+        <span class="name">{{item.name}}</span>
+        <p class="text">{{item.text}}</p>
+      </li>
+    </ul>
+    <div class="leave_message">
+      <Input v-model="value" type="textarea" :rows="4" placeholder="请输入你的留言..."></Input>
+      <Button @click="leave" type="success">留言</Button>
     </div>
-    <login v-if="active"></login>
-    <sigin v-if="!active"></sigin>
   </div>
 </template>
 <script>
-import login from './login.vue'
-import sigin from './sigin.vue'
-
 export default {
   data () {
     return {
-      active: true,
+      message: [{name:"user",text:"测试留言"},],
+      value: '',
+      user:this.$store.getters.getUser ? this.$store.getters.getUser : window.localStorage.getItem('user_id')
     }
   },
   methods: {
-    login () {
-      this.active = true
-    },
-    sigin () {
-      this.active = false
+    leave () {
+      this.message.push({name:this.user,text:this.value})
     }
-  },
-  components: {
-    login: login,
-    sigin: sigin
   }
 }
 </script>
 <style lang="stylus">
-.index
-  margin: 0 auto
-  width: 20rem
-  .title
-    display: flex
-    justify-content: center
-    padding: 50px 20px
-    font-size: 1.2rem
-    color: lightness
-    text-align: center
-    div
-      flex: 1
-      cursor: pointer
-    .active
-      background:#42b983
-  .hiden
-    display: none
+.message_box
+  height: 400px;
+  overflow: auto;
+  .message
+    width:80%
+    height:50px
+    margin:1px auto
+    list-style-type:none
+    background-color:#42b983
+    border-radius:10px
+    .name
+      float: left
+      display:inline-block
+      text-align:center
+      margin:5px 5px
+      width:40px
+      height:40px
+      line-height:40px;
+      background-color:#fff
+      border-radius:25px
+.leave_message
+  width:80%
+  margin:0 auto
+  position:fixed
+  bottom:5px
+  left:0
+  right:0
+  Button
+    width:200px
+    margin:20px 0
 </style>

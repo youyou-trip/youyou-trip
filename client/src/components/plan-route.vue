@@ -1,6 +1,7 @@
 <template>
-  <div class="plan-route">
-    <div class="canvas">
+  <Row>
+    <Col span="18">
+      <div class="canvas">
       <div class="myCanvas-wrapper">
         <myCanvas>您的浏览器不支持Canvas</myCanvas>
       </div>
@@ -12,12 +13,16 @@
         </ul>
       </div>
     </div>
-    <div class="list">
-      <ul>
-        <li v-for="sight in sights" :key="sight.id">{{sight.name}}</li>
-      </ul>
-    </div>
-  </div>
+    </Col>
+    <Col span="6">
+       <Timeline>
+        <TimelineItem v-for="city in City">
+            <p class="time">{{city.name}}</p>
+            <p class="content">Apple I 问世</p>
+        </TimelineItem>
+    </Timeline>
+    </Col>
+  </Row>
 </template>
 <script>
 import fetch from '@/util/fetch'
@@ -53,6 +58,12 @@ export default {
           this.sights = res.data.hotSights
         }
       })
+
+      if(this.City.length < 1){
+        this.$store.dispatch('SAVE', {start: this.start, end: this.end})
+        this.$store.dispatch('City',{name:this.start,X:window.localStorage.getItem('startX'),Y:window.localStorage.getItem('startY')})
+        this.$store.dispatch('City',{name:this.end,X:window.localStorage.getItem('endX'),Y:window.localStorage.getItem('endY')})
+      }
   },
   methods: {
     toggleCity (e) {
@@ -87,42 +98,32 @@ export default {
 }
 </script>
 <style lang="stylus" scoped>
-.plan-route
-  display: flex
-  flex-wrap: nowrap
-  .canvas
-    flex: 3
-    .myCanvas-wrapper
-      height: 36rem
-    .cities
-      ul
-        li
-          position: relative
+.cities
+  ul
+    li
+      position: relative
+      display: inline-block
+      width: 6rem
+      margin: 0.2rem 0.5rem
+      list-style: none
+      cursor: pointer
+      &:hover
+        p::after
           display: inline-block
-          width: 6rem
-          margin: 0.2rem 0.5rem
-          list-style: none
-          cursor: pointer
-          &:hover
-            p::after
-              display: inline-block
-              position: absolute
-              right: -0.2rem
-              top: -0.4rem
-              width: 0.8rem
-              height: 0.8rem
-              color: #ffffff
-              background: red
-              border-radius: 50%
-              text-align: center
-              line-height: 0.9rem
-              font-size: 0.8rem
-              content: '+'
-            p.sub::after
-              content: '-'
-  .list
-    flex: 1
-    ul
-      li
-        list-style: none
+          position: absolute
+          right: -0.2rem
+          top: -0.4rem
+          width: 0.8rem
+          height: 0.8rem
+          color: #ffffff
+          background: red
+          border-radius: 50%
+          text-align: center
+          line-height: 0.9rem
+          font-size: 0.8rem
+          content: '+'
+        p.sub::after
+          content: '-'
+.time
+  text-align:left;
 </style>

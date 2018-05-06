@@ -55,8 +55,8 @@ export default {
 
 <style lang="stylus" scoped>
 .input
-  margin: 20px auto
+  margin:10px auto
 Button
   width:200px
-  margin:50px 0
+  margin:20px 0
 </style>
