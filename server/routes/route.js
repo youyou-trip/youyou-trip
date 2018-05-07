@@ -1,14 +1,16 @@
-var express = require('express');
+var express = require('express')
 var jwt = require('jsonwebtoken')
+var redis = require('redis')
 var fs = require('fs')
-var router = express.Router();
+var router = express.Router()
 
-var Mysql = require('../sqlTool');
-var models = require('../config');
+var Mysql = require('../sqlTool')
+var models = require('../config')
 const key = fs.readFileSync(__dirname + '/../lib/primate.key')
 const type = JSON.parse(fs.readFileSync(__dirname + '/../resource/sights-type.json', 'utf8'))
 // 连接数据库
-var Connection = new Mysql(models.db);
+var Connection = new Mysql(models.db)
+var client = redis.createClient()
 
 // 增加接口
 router.post('/save-city', async function (req, res) {
@@ -86,28 +88,79 @@ router.post('/start-end', async function (req, res) {
         res.send(0)
     }
 
-    let user_id = jwt.verify(req.cookies.token, key).user_id
-    let timestamp = jwt.verify(req.cookies.token, key).timestamp
+    let token = jwt.verify(req.cookies.token, key)
+    if (token.login) {
+        let user_id = token.user_id
+        let timestamp = token.timestamp
 
-    if (user_id == undefined) {
-        res.send({ error: 0 })
-        return
-    }
-    // 时间戳作为路线id
-    Connection.updateData(
-        {
-            user_id: user_id,
-            start: start,
-            end: end,
-            date: new Date()
-        },
-        {
-            route_id: timestamp.toString()
+        if (user_id == undefined) {
+            res.send({ error: 0 })
+            return
         }
-        , 'route_data')
+        // 时间戳作为路线id
+        Connection.updateData(
+            {
+                user_id: user_id,
+                start: start,
+                end: end,
+                date: new Date()
+            },
+            {
+                route_id: timestamp.toString()
+            }
+            , 'route_data')
 
-    console.log('路线：' + start + '->' + end + '存储成功')
-    res.send({ error: 1 })
+        console.log('路线：' + start + '->' + end + '存储成功')
+        res.send({ error: 1 })
+    } else {
+        // 从redis中读取信息
+        client.HGETALL(req.cookies.token, function (err, result) {
+            if (err) {
+                console.log(err)
+            }
+            result['start'] = start
+            result['end'] = end
+            client.hmset(req.cookies.token, ["start", start, "end", end], function (err, result) {
+                if (err) {
+                    console.log(err)
+                }
+                /*设置过期时间为1天*/
+                client.EXPIRE(token, 86400);
+            });
+        })
+        res.send({ error: 1 })
+    }
+});
+
+router.get('/start-end', async function (req, res) {
+    if (!req.cookies.token) {
+        res.send(0)
+    }
+
+    let token = jwt.verify(req.cookies.token, key)
+    if (token.login) {
+        let user_id = token.user_id
+        let timestamp = token.timestamp
+
+        if (user_id == undefined) {
+            res.send({ error: 0 })
+            return
+        }
+        let start = (await Connection.selectData(['start'], { route_id: token.timestamp }, 'route_data', true))[0]['start']
+        let end = (await Connection.selectData(['end'], { route_id: token.timestamp }, 'route_data', true))[0]['end']
+
+        res.send({ error: 1, start: start, end: end })
+    } else {
+        // 从redis中读取信息
+        client.HGETALL(req.cookies.token, function (err, result) {
+            if (err) {
+                console.log(err)
+            }
+            let start = result['start']
+            let end = result['end']
+            res.send({ error: 1, start: start, end: end })
+        })
+    }
 });
 
 module.exports = router;

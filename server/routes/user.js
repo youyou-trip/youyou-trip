@@ -18,8 +18,12 @@ router.post('/login', async function (req, res, next) {
     if (result.length >= 1) {
         console.log('用户：' + result['0']['user_id'] + '登陆成功')
         let timestamp = Date.parse(new Date()).toString()
-        let token = jwt.sign({ user_id: userId, timestamp: timestamp }, key);
-        res.cookie('token', token)
+        let token = jwt.sign({ 
+            login: true, 
+            user_id: userId, 
+            timestamp: timestamp 
+        }, key);
+        res.cookie('token', token, { httpOnly: true })
         res.send('1')     //登陆成功返回1
     }
     else
