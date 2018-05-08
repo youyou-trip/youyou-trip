@@ -6,25 +6,18 @@
         <p class="text">{{item.text}}</p>
       </li>
     </ul>
-    <div class="leave_message">
-      <Input v-model="value" type="textarea" :rows="4" placeholder="请输入你的留言..."></Input>
-      <Button @click="leave" type="success">留言</Button>
-    </div>
   </div>
 </template>
 <script>
 export default {
   data () {
     return {
-      message: [{name:"user",text:"测试留言"},],
       value: '',
+      message:'',
       user:this.$store.getters.getUser ? this.$store.getters.getUser : window.localStorage.getItem('user_id')
     }
   },
   methods: {
-    leave () {
-      this.message.push({name:this.user,text:this.value})
-    }
   }
 }
 </script>

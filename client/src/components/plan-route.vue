@@ -5,27 +5,20 @@
       <div class="myCanvas-wrapper">
         <myCanvas>您的浏览器不支持Canvas</myCanvas>
       </div>
-      <div class="cities">
-        <ul>
+    </div>
+    </Col>
+    <Col span="6">
+     <div class="cities">
+        <ul id="allcity">
           <li v-for="city in cities" :data-id="city.city_id" :data-X="city.pointX" :data-Y="city.pointY" :key="city.id" @click="toggleCity($event)">
             <p>{{city.name}}</p>
           </li>
         </ul>
       </div>
-    </div>
-    </Col>
-    <Col span="6">
-       <Timeline>
-        <TimelineItem v-for="city in City">
-            <p class="time">{{city.name}}</p>
-            <p class="content">Apple I 问世</p>
-        </TimelineItem>
-    </Timeline>
     </Col>
   </Row>
 </template>
 <script>
-import fetch from '@/util/fetch'
 import myCanvas from '@/components/myCanvas.vue'
 
 export default {
@@ -40,30 +33,29 @@ export default {
     }
   },
   mounted () {
-    fetch({
+    this.$fetch({
       method: 'get',
-      url: 'http://localhost:3000/city/all?province=陕西'
+      url: '/api/city/all?province=陕西'
     })
       .then(res => {
         if (res.data.error === 1) {
-          this.cities = res.data.cityInfo
+          for(let i = 0; i<res.data.cityInfo.length ; i++){
+            if(res.data.cityInfo[i].name !=this.start && res.data.cityInfo[i].name !=this.end){
+              this.cities.push(res.data.cityInfo[i])
+            }
+          }
         }
       })
-    fetch({
+    this.$fetch({
       method: 'get',
-      url: 'http://localhost:3000/sight/hot?hotSightsStart=' + this.hotSightsStart
+      url: '/api/route/start-end'
     })
       .then(res => {
         if (res.data.error === 1) {
-          this.sights = res.data.hotSights
+          this.$store.dispatch('City',{name:res.data.start,X:res.data.startPos.x,Y:res.data.startPos.y,ID:res.data.startId})
+          this.$store.dispatch('City',{name:res.data.end,X:res.data.endPos.x,Y:res.data.endPos.y,ID:res.data.endId})
         }
       })
-
-      if(this.City.length < 1){
-        this.$store.dispatch('SAVE', {start: this.start, end: this.end})
-        this.$store.dispatch('City',{name:this.start,X:window.localStorage.getItem('startX'),Y:window.localStorage.getItem('startY')})
-        this.$store.dispatch('City',{name:this.end,X:window.localStorage.getItem('endX'),Y:window.localStorage.getItem('endY')})
-      }
   },
   methods: {
     toggleCity (e) {
@@ -84,9 +76,9 @@ export default {
       if(sub==="true"){
         e.target.className = ''
         e.target.parentNode.setAttribute("data-sub","false")
-        this.$store.dispatch('deleteCity', {name:targetName, X:Number(X),Y:Number(Y)})
+        this.$store.dispatch('deleteCity', {name:targetName, X:Number(X),Y:Number(Y),ID:Number(targetId)})
       }else{
-        this.$store.dispatch('City', {name:targetName, X:Number(X),Y:Number(Y)})
+        this.$store.dispatch('AddCity', {name:targetName, X:Number(X),Y:Number(Y),ID:Number(targetId)})
         e.target.className += 'sub'
         e.target.parentNode.setAttribute("data-sub","true")
       }

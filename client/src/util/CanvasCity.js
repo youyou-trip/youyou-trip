@@ -33,7 +33,7 @@ function Sumr (arr){
  return sum;
 }
 
-function sortXY(D){
+function sortXY(D,Dr){
 	let canvasX = 900;
 	let canvasY = 400;
 
@@ -41,26 +41,23 @@ function sortXY(D){
 	let Dt = D.sort(compare("X"));
 	let Xdistance = Dt[Dt.length-1].X- Dt[0].X;
 	let minX = Dt[0].X;
-	console.log(Xdistance +" "+ minX);
 
 	Dt = Dt.sort(compare("Y"));
 	let Ydistance = Dt[Dt.length-1].Y- Dt[0].Y;
 	let minY = Dt[0].Y;
-	console.log(Ydistance + " "+minY);
+
 
 	if(2 * Ydistance < Xdistance){
 		let section = Xdistance/canvasX;
-		console.log(section + "X");
-		for(let i = 0;i < Dt.length; i++){
-			Dt[i].X =  Number(50+(Dt[i].X-minX)/section);
-			Dt[i].Y =  Number(450-(Dt[i].Y-minY)/section);
+		for(let i = 0;i < Dr.length; i++){
+			Dr[i].X =  Number(50+(Dr[i].X-minX)/section);
+			Dr[i].Y =  Number(450-(Dr[i].Y-minY)/section);
 		}
 	}else{
 		let section = Ydistance/canvasY;
-		console.log(section + "Y");
-		for(let i = 0;i < Dt.length; i++){
-			Dt[i].X =  Number(50+(Dt[i].X-minX)/section);
-			Dt[i].Y =  Number(450-(Dt[i].Y-minY)/section);
+		for(let i = 0;i < Dr.length; i++){
+			Dr[i].X =  Number(50+(Dr[i].X-minX)/section);
+			Dr[i].Y =  Number(450-(Dr[i].Y-minY)/section);
 		}
 	}
 	// let Darr = [];
@@ -94,15 +91,15 @@ function sortXY(D){
 	// 	Dt[i].Y = 30 + Darr[i-1]*section;
 	// }
 
-	return Dt;
+	return Dr;
 }
 
 export function CanvasCity(D) {
-	console.log(D);
 	let  len = D.length;
 	var Dt = copyArr(D);
+	var Dr = copyArr(D);
 	if(len>2){
-		return sortXY(Dt);
+		return sortXY(Dt,Dr);
 	}else{
 		Dt.sort(compare("X"));
 		Dt[0].X=250;

@@ -23,5 +23,8 @@ export default {
   },
   clearCity (state,obj){
     state.city = [];
+  },
+  addCity (state,obj){
+    state.city.splice(1,0,obj);
   }
 }

@@ -20,7 +20,6 @@
   </div>
 </template>
 <script>
-import fetch from '@/util/fetch'
 
 export default {
   data () {
@@ -31,16 +30,16 @@ export default {
     }
   },
   mounted () {
-    fetch({
+    this.$fetch({
       method: 'get',
-      url: 'http://localhost:3000/sight/hot?hotSightsStart=' + this.hotSightsStart,
+      url: '/api/sight/hot?hotSightsStart=' + this.hotSightsStart,
     })
       .then(res => {
         // this.$refs.hot_sights.innerHTML += JSON.stringify(res)
       })
-    fetch({
+    this.$fetch({
     method: 'get',
-    url: 'http://localhost:3000/city/all?province=陕西',
+    url: '/api/city/all?province=陕西',
     })
       .then(res => {
         // this.$refs.hot_sights.innerHTML += JSON.stringify(res)
@@ -48,9 +47,9 @@ export default {
   },
   methods: {
     submit () {
-        fetch({
+        this.$fetch({
           method: 'post',
-          url: 'http://localhost:3000/route/start-end',
+          url: '/api/route/start-end',
           data: {
             start: this.start,
             end: this.end
