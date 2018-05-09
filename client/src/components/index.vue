@@ -51,11 +51,15 @@ export default {
     url: '/api/city/all?province=陕西省',
     })
       .then(res => {
-        this.cityList = res.data.cityInfo
+        for(let key in res.data.country) {
+          this.cityList=this.cityList.concat(res.data.country[key])
+        }
+      
       })
   },
   methods: {
     submit () {
+      if(this.start!==''&&this.end!==''){
         this.$fetch({
           method: 'post',
           url: '/api/route/start-end',
@@ -73,6 +77,9 @@ export default {
         window.localStorage.setItem('end', this.end)
         this.$store.dispatch('SAVE', {start: this.start, end: this.end})
         this.$store.dispatch('ClearCity',{})
+      }else{
+        alert("终点或起点未选择！");
+      }
     }
   }
 }
@@ -82,7 +89,7 @@ export default {
   display:flex
   flex-direction:column
   .title
-    margin: 60px 0
+    margin: 150px 0 40px 0
   .box
     margin: 58px auto
     display:flex
