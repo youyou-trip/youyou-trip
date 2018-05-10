@@ -1,55 +1,86 @@
 <template>
   <div class="user">
-    <ul class="message_box">
-      <li v-for="item in message" class="message">
-        <span class="name">{{item.name}}</span>
-        <p class="text">{{item.text}}</p>
-      </li>
-    </ul>
+    <div class="message_box">
+      <div class="header"><h2>我的出行</h2></div>
+      <div  class="message" v-for="item in userData">
+        <div class="box-header">
+          <div>{{item.start}}</div>->
+          <div>{{item.end}}</div>
+          <div class="time">{{item.date}}</div>
+        </div>
+        <div class="box-body">
+          <div class="body-pass">
+            <div v-for="city in item.passCity">{{city}} </div>
+          </div>
+          <div class="body-sight">
+            <div v-for="sight in item.sights">{{sight.sight}}</div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 <script>
 export default {
   data () {
     return {
-      value: '',
-      message:'',
-      user:this.$store.getters.getUser ? this.$store.getters.getUser : window.localStorage.getItem('user_id')
+      user:this.$store.getters.getUser ? this.$store.getters.getUser : window.localStorage.getItem('user_id'),
+      userData:[]
     }
   },
   methods: {
+  },
+  mounted (){
+    this.$fetch({//获取城市
+      method: 'get',
+      url: '/api/mine'
+    })
+      .then(res => {
+        if (res.data.error === 1) {
+          for(let i =0;i<res.data.userData.length;i++){
+            this.userData.push({
+              date:res.data.userData[i].date,
+              end:res.data.userData[i].end,
+              passCity:JSON.parse(res.data.userData[i].passCity),
+              sights:JSON.parse(res.data.userData[i].sights),
+              start:res.data.userData[i].start
+            })
+          }
+        }
+      })
   }
 }
 </script>
 <style lang="stylus">
-.message_box
-  height: 400px;
-  overflow: auto;
-  .message
+.user
+  padding-top:62px
+  .message_box
     width:80%
-    height:50px
-    margin:1px auto
+    margin:auto
+    padding:10px 20px 
     list-style-type:none
-    background-color:#42b983
-    border-radius:10px
-    .name
-      float: left
-      display:inline-block
-      text-align:center
-      margin:5px 5px
-      width:40px
-      height:40px
-      line-height:40px;
-      background-color:#fff
-      border-radius:25px
-.leave_message
-  width:80%
-  margin:0 auto
-  position:fixed
-  bottom:5px
-  left:0
-  right:0
-  Button
-    width:200px
-    margin:20px 0
+    .header
+      background-color: #42b983
+      color:#fff
+      border-radius:5px
+      margin-bottom:10px
+    .message
+      border:1px solid #42b983
+      border-radius:5px;
+      margin:2px
+      .box-header
+        display:flex
+        div
+          flex:1
+        .time
+          flex:5
+      .box-body
+        .body-pass
+          display:flex
+          div
+            flex:1
+        .body-sight
+          display:flex
+          div
+            flex:1
 </style>

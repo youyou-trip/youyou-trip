@@ -51,6 +51,7 @@ export default {
     url: '/api/city/all?province=陕西省',
     })
       .then(res => {
+        console.log(res.data.country)
         for(let key in res.data.country) {
           this.cityList=this.cityList.concat(res.data.country[key])
         }

@@ -34,19 +34,12 @@
       </Scroll>
     </div>
     <div class="cityPath">
-      <div class="city-path" v-for="item in city">
-        <div class="city_box">
-          {{item}}
-          <Select v-model="model" style="width:400px">
-            <Option v-for="hotelitem in hotel[item]" :value="hotelitem.name">
-              <div :data-X="hotelitem.X" :data-Y="hotelitem.Y">{{hotelitem.name}}</div>
-            </Option>
-          </Select>
-          <div class="pathitem">
-            <span v-for="pathitem in cityPath[item]">{{pathitem.name}}</span>
-          </div>
-        </div>
+      <div class="path" v-for="(city,key) in sightPath">
+        <div class="header">{{key}}规划路线</div>
+        <div calss="cityname">{{city}}</div>
       </div>
+      <Button @click="TSPpath" type="success">路线生成</Button>
+      <Button @click="Postpath" type="success">确认路线</Button>
     </div>
     <div class="gettrain">
       <Table width="550" border :columns="columns" :data="data"></Table>
@@ -67,8 +60,7 @@ export default {
       hotsight:[],
       hotSightsStart:0,
       cityPath:{},
-      hotel:{},
-      model:''
+      sightPath:{}
     }
   },methods:{
     getTrain(e){
@@ -124,6 +116,7 @@ export default {
       return new Promise(() => {
           setTimeout(() => {
               const last = this.hotsight[this.hotsight.length - 1];
+              let name = this.now
               this.$fetch({
                 method: 'get',
                 url: `/api/sight/hot?city=${name}&hotSightsStart=${this.hotSightsStart}`
@@ -133,7 +126,9 @@ export default {
                   for(let i =0;i < res.data.hotSights.length;i++){
                     this.hotsight.push({name:res.data.hotSights[i].name,
                     rating:Number(res.data.hotSights[i].overall_rating),
-                    image:res.data.hotSights[i].image});
+                    image:res.data.hotSights[i].image,
+                    X:res.data.hotSights[i].diPointX,
+                    Y:res.data.hotSights[i].diPointY});
                   }
                   this.hotSightsStart +=10;
                 }
@@ -165,7 +160,36 @@ export default {
         }
       }
       this.cityPath[this.now].splice(k,1);
-      console.log(this.cityPath)
+    },
+    TSPpath(){
+      let sightpath = {};
+      for(let key in this.cityPath){
+        let arrX = [];
+        let arrY = [];
+        for(let i =0;i<this.cityPath[key].length;i++){
+          arrX.push(this.cityPath[key][i].X);
+          arrY.push(this.cityPath[key][i].Y);
+        }
+        sightpath[key]=TSP(getDistance(arrX,arrY),arrX.length);
+        for(let key in sightpath){
+          for(let i =0;i<sightpath[key].length;i++){
+            sightpath[key][i] = this.cityPath[key][i].name;
+          }
+        }
+        this.sightPath = sightpath;
+        console.log(this.sightPath)
+      }
+    },
+    Postpath(){
+       this.$fetch({
+        method: 'post',
+        url: '/api/route/save-sight',
+        data:this.sightPath
+      })
+        .then(res => {
+          alert("存储成功，请到我的出行查看！")
+        })
+        
     }
   },
   mounted () {
@@ -179,7 +203,6 @@ export default {
           for(let i=0;i<this.city.length;i++){
             this.cityPath[this.city[i]]=[];
           }
-          this.hotel = res.data.hotel;
 
           this.now = this.city[0];
           this.$fetch({//获取hot
@@ -199,6 +222,10 @@ export default {
               }
             })
         }
+      })
+      .catch(()=>{
+        alert("请选择路径");
+        this.$router.push('/');
       })
 
   }
@@ -244,10 +271,15 @@ export default {
           left:10px
 
   .cityPath
-    flex:3
-    border:1px solid #42b983 
-  .hot
     flex:2
+    Button
+      width:48%
+    // .path
+    // .header
+    // .cityname
+    // .citysight
+  .hot
+    flex:3
     border:2px solid #42b983
     border-radius:5px
     height:98%

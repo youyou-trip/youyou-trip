@@ -18,7 +18,7 @@
         <Button @click="clickpath" type="success">确认路线</Button>
       </div>
       <div class="path">
-        <span v-for="item in path">{{item}} -> </span>
+        <span v-for="item in path">{{item}}  </span>
       </div>
   </div>
 </template>
@@ -59,8 +59,8 @@ export default {
     })
       .then(res => {
         if (res.data.error === 1) {
-          this.cities = res.data.city;
-          this.country = res.data.country; 
+          this.cities = res.data.city;          
+          this.country = res.data.country;
         }
       })
 
@@ -88,6 +88,7 @@ export default {
         })
         .then(res => {
           if (res.data === 1) {
+            console.log(res.data)
             this.$router.push('/sight-route')
           }
         })

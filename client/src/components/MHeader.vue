@@ -6,12 +6,12 @@
             <router-link to="/">youyoutrip</router-link>
         </MenuItem>
         <MenuItem name="2">
-            <Icon type="location"></Icon>
-            <router-link to="/sight-route">定点规划</router-link>
-        </MenuItem>
-        <MenuItem name="3">
             <Icon type="map"></Icon>
             <router-link to="/plan-route">多城市规划</router-link>
+        </MenuItem>
+        <MenuItem name="3">
+            <Icon type="location"></Icon>
+            <router-link to="/sight-route">定点规划</router-link>
         </MenuItem>
         <MenuItem name="4">
             <Icon type="plane"></Icon>
@@ -77,7 +77,6 @@ import sigin from './sigin.vue'
                 this.$refs.login.style.display = "block";
             },
             change (msg) {
-                console.log("aaaaa");
                 this.$refs.login.style.display = "none";
             }
         }
