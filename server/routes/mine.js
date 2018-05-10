@@ -11,18 +11,14 @@ const type = JSON.parse(fs.readFileSync(__dirname + '/../resource/sights-type.js
 var Connection = new Mysql(models.db);
 
 // 增加用户接口
-router.get('/mine', async function (req, res, next) {
+router.get('/', async function (req, res, next) {
     let token = jwt.verify(req.cookies.token, key)
     if (token.login) {
-        let user_id = jwt.verify(req.cookies.token, key).user_id
-        if (!mine) {
-            res.send('0')
-            return
-        }
-        let userData = await Connection.selectData(['name', 'detailInfo'], { id: user_id }, 'user_data', true)
-        res.send(userData)
+        let user_id = token.user_id
+        let userData = await Connection.selectData(['date, start, end, passCity, sights, comment'], { user_id: user_id }, 'route_data', true)
+        res.send({error: 1, userData: userData})
     } else {
-        res.send('0')
+        res.send({error: 0})
     }
 
 });
