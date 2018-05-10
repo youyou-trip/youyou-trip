@@ -31,12 +31,11 @@ router.get('/', async function (req, res) {
       login: false,
       user_id: util.createId()
     }, key)
-    client.hmset(token, ["start", "", "end", ""], function (err, result) {
+    client.hmset(token, ["start", "", "end", "", "route", "", "sights", ""], function (err, result) {
       if (err) {
         console.log(err)
       }
-      console.log(result)
-     // callback({ code: 1, msg: result });
+      // callback({ code: 1, msg: result });
       /*设置过期时间为1天*/
       client.EXPIRE(token, 86400);
     });

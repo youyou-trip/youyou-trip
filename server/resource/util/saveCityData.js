@@ -13,6 +13,7 @@ module.exports = async function (connection) {
                     create table if not exists city_data(
                     city_id INTEGER NOT NULL AUTO_INCREMENT,
                     province VARCHAR(100) NOT NULL,
+                    city VARCHAR(100) NOT NULL,
                     name VARCHAR(100) NOT NULL,
                     pointX VARCHAR(100),
                     pointY VARCHAR(100),
@@ -31,9 +32,15 @@ module.exports = async function (connection) {
                         item['pointX'] += '0'
                     }
                 }
+                if(item['pointY'].length < 8){
+                    for(let i = item['pointY'].length; i < 8; i++){
+                        item['pointY'] += '0'
+                    }
+                }
                 connection.insertData(
                     { 
                         'province': item['province'], 
+                        'city': item['city'],
                         'name': item['name'], 
                         'pointX': item['pointX'], 
                         'pointY': item['pointY'], 

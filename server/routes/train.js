@@ -29,6 +29,7 @@ router.get('/', async (req, res) => {
 
     if(s == e) {
         res.send({error: 1, trains: {}})
+        return;
     }
     let url = `http://www.jt2345.com/huoche/zhanzhan/${s}-${e}.htm`
 

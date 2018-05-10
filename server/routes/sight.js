@@ -24,7 +24,9 @@ router.get('/all', async (req, res) => {
 
 router.get('/hot', async (req, res) => {
     let token = jwt.verify(req.cookies.token, key)
-    let hotSightsStart = req.query.hotSightsStart || 10
+    let hotSightsStart = req.query.hotSightsStart || 0
+    let city = req.query.city
+
     if (token.login) {
         let user_id = token.user_id
         let route_id = token.timestamp
@@ -45,24 +47,23 @@ router.get('/hot', async (req, res) => {
         let hotSights = []
         if (tuijian.length >= 1) {
             tuijian.forEach(async (item, index) => {
-                let s = await Connection.selectTopData(item.name, hotSightsStart, parseInt(item.value / count * 10), 'sight_data')
+                let s = await Connection.selectTopData(item.name, hotSightsStart, city, parseInt(item.value / count * 10), 'sight_data')
                 if (s.length >= 1) {
                     hotSights = hotSights.concat(s)
                 }
 
                 if (index == tuijian.length - 1) {
-                    //  console.log(hotSights)
                     res.send({ error: 1, hotSights: hotSights })
                 } else if (index > tuijian.length - 1) {
                     res.send({ error: 0 })
                 }
             })
         } else {
-            let hotSights = await Connection.selectTopData('景区', hotSightsStart, 10, 'sight_data')
+            let hotSights = await Connection.selectTopData('景', hotSightsStart, city, 10, 'sight_data')
             res.send({ error: 1, hotSights: hotSights })
         }
     } else {
-        let hotSights = await Connection.selectTopData('景区', hotSightsStart, 10, 'sight_data')
+        let hotSights = await Connection.selectTopData('景', hotSightsStart, city, 10, 'sight_data')
             res.send({ error: 1, hotSights: hotSights })
     }
 });

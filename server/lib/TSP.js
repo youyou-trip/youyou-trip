@@ -54,7 +54,7 @@ var TSP = function (D) {
         i = Math.floor(i - Math.pow(2, j - 1));//从i中去掉j结点
     }
     route.push(j)
-    return route
+    return route11
 }
 
 module.exports = TSP
