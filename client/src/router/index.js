@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import index from '@/components/index'
-import user from '@/components/user'
-import start_end from '@/components/start-end'
+import user_path from '@/components/user-path'
+import sight_route from '@/components/sight-route'
 import plan_route from '@/components/plan-route'
 
 Vue.use(Router)
@@ -15,14 +15,14 @@ export default new Router({
       component: index
     },
     {
-      path: '/user',
-      name: 'user',
-      component: user
+      path: '/user-path',
+      name: 'user-path',
+      component: user_path
     },
     {
-      path: '/start-end',
-      name: 'start-end',
-      component: start_end
+      path: '/sight-route',
+      name: 'sight-route',
+      component: sight_route
     },
     {
       path: '/plan-route',

@@ -20,5 +20,11 @@ export default {
   		}
   	}
   	state.city.splice(k,1);
+  },
+  clearCity (state,obj){
+    state.city = [];
+  },
+  addCity (state,obj){
+    state.city.splice(1,0,obj);
   }
 }

@@ -14,7 +14,6 @@
     </div>
 </template>
 <script>
-import fetch from '@/util/fetch'
 export default {
   data () {
     return {
@@ -24,19 +23,20 @@ export default {
   },
   methods: {
     login () {
-      fetch({
+      this.$fetch({
         method: 'post',
-        url: 'http://localhost:3000/user/login',
+        url: '/api/user/login',
         data: {
           id: this.user_id,
           password: this.psd
         }
       })
         .then(res => {
-          if (res.data === 1) {
+          if (res.data == 1) {
             this.$store.dispatch('User', this.user_id)
             window.localStorage.setItem('user_id', this.user_id)
             this.$router.push('/')
+            this.$emit('index','true');
           }
         })
     }
@@ -48,8 +48,8 @@ export default {
 .login
   .box
     .input
-      margin: 20px auto
+      margin:10px auto
   Button
       width:200px
-      margin:50px 0
+      margin:20px 0
 </style>

@@ -19,7 +19,6 @@
 </template>
 
 <script>
-import fetch from "@/util/fetch";
 export default {
   data() {
     return {
@@ -32,19 +31,20 @@ export default {
     signin() {
       // let that = this
       if (this.user_id && this.name && this.psd) {
-        fetch({
+        this.$fetch({
           method: "post",
-          url: "http://localhost:3000/user/signin",
+          url: "/api/user/signin",
           data: {
             id: this.user_id,
             name: this.name,
             password: this.psd
           }
         }).then(res => {
-          if (res.data === 1) {
+          if (res.data == 1) {
             this.$store.dispatch('User',this.user_id)
             window.localStorage.setItem('user_id', this.user_id)
             this.$router.push('/')
+            this.$emit('index','true');
           }
         });
       }
@@ -55,8 +55,8 @@ export default {
 
 <style lang="stylus" scoped>
 .input
-  margin: 20px auto
+  margin:10px auto
 Button
   width:200px
-  margin:50px 0
+  margin:20px 0
 </style>

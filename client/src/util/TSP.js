@@ -3,9 +3,8 @@
  * @param {Array} D 距离矩阵
  */
 
-var TSP = function (D) {
+var TSP = function (D,n) {
     var i, j, k, min, temp;
-    var n = 7
     var b = Math.pow(2, n - 1);
 
     //申请二维数组F和M

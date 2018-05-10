@@ -11,5 +11,11 @@ export default {
   }),
   'deleteCity':(({commit},obj)=>{
   	commit('deleteCity',obj)
+  }),
+  'ClearCity':(({commit},obj)=>{
+    commit('clearCity',obj)
+  }),
+  'AddCity':(({commit},obj)=>{
+    commit('addCity',obj)
   })
 }
