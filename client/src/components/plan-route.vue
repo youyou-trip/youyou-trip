@@ -90,6 +90,8 @@ export default {
           if (res.data === 1) {
             console.log(res.data)
             this.$router.push('/sight-route')
+          }else{
+            alert('请先登录')
           }
         })
       },
