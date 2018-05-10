@@ -97,7 +97,6 @@ router.post('/save-sight', async function (req, res, next) {
                             {
                                 user_id: user_id
                             }, 'user_data')
-                        console.log(1111111111)
                         return res.send({error: 1})
                     }
                 }
