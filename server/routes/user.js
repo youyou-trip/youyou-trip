@@ -17,17 +17,15 @@ router.post('/login', async function (req, res, next) {
     let result = await Connection.selectData(['*'], { user_id: userId, password: psd }, 'user_data', true)
     if (result.length >= 1) {
         console.log('用户：' + result['0']['user_id'] + '登陆成功')
-        let timestamp = Date.parse(new Date()).toString()
-        let token = jwt.sign({ 
-            login: true, 
-            user_id: userId, 
-            timestamp: timestamp 
+        let token = jwt.sign({
+            login: true,
+            user_id: userId
         }, key);
         res.cookie('token', token, { httpOnly: true })
         res.send('1')     //登陆成功返回1
     }
     else
-        res.send('0')   //登录失败返回0
+        res.send('2')   //登录失败返回0
 });
 
 router.post('/signin', async function (req, res, next) {
@@ -37,7 +35,7 @@ router.post('/signin', async function (req, res, next) {
     let psd = req.body.password
     let result = await Connection.selectData(['name'], { user_id: id }, 'user_data', true)
     if (result.length >= 1) {
-        res.send('0')
+        res.send('3')
     } else {
         let json = {}
         type.forEach((item) => {

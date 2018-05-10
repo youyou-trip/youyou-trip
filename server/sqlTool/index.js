@@ -60,6 +60,7 @@ class Tools {
      * @param {Array} field - 需要提取的字段
      * @param {json} condtions - 提取的条件
      * @param {string} table - 待提取的数据表
+     * @param {bool} bool - 是否精确查询
      */
     async selectData(field, conditions, table, bool) {
         let result
@@ -94,10 +95,10 @@ class Tools {
      * @param {string} num - 需要的热门景点数目
      * @param {string} table - 选择的数据表
      */
-    async selectTopData(type, start, num, table) {
+    async selectTopData(type, start, city, num, table) {
         let result
         await new Promise((resolve, reject) => {
-            let sql = `select name,std_tag,addr,area_name,overall_rating,image, link, short_desc, brief_ticket, mapsearchaladdin from ${table} where std_tag like '%${type}%' order by ifnull(comment_num,0)+ifnull(overall_rating, 0) desc limit ${num} offset ${start}`
+            let sql = `select name,diPointX,diPointY,image,overall_rating from ${table} where std_tag like '%${type}%' and area_name like '%${city}%' order by ifnull(comment_num,0)+ifnull(overall_rating, 0) desc limit ${num} offset ${start}`
             this.Connection.query(sql, function (error, results, fields) {
                 if (error) throw error;
                 resolve(results)

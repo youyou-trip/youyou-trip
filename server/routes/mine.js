@@ -24,8 +24,6 @@ router.get('/mine', async function (req, res, next) {
     } else {
         res.send('0')
     }
-    
+
 });
-
-
 module.exports = router;
