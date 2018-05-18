@@ -12,8 +12,8 @@ var Connection = new Mysql(models.db);
 
 // 增加接口
 router.get('/all', async (req, res) => {
-    let tag = req.body.tag
-    let city = req.body.city
+    let tag = req.query.tag
+    let city = req.query.city
     let sightsList = await Connection.selectData(
         ['sight_id', 'name', 'std_tag', 'addr', 'area_name', 'image', 'brief_ticket', 'overall_rating', 'short_desc', 'mapsearchaladdin'],
         { std_tag: tag, area_name: city },
@@ -43,7 +43,6 @@ router.get('/hot', async (req, res) => {
                 })
             }
         }
-
         let hotSights = []
         if (tuijian.length >= 1) {
             tuijian.forEach(async (item, index) => {

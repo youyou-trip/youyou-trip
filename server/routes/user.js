@@ -22,20 +22,21 @@ router.post('/login', async function (req, res, next) {
             user_id: userId
         }, key);
         res.cookie('token', token, { httpOnly: true })
-        res.send('1')     //登陆成功返回1
+        res.send({error: 1, username: result[0]['name']})     //登陆成功返回1
     }
     else
-        res.send('2')   //登录失败返回0
+        res.send({error: 2})   //登录失败返回0
 });
 
 router.post('/signin', async function (req, res, next) {
+    console.log(req.body)
     // 读取用户名称，id，密码，存入数据库
     let id = req.body.id
     let userName = req.body.name
     let psd = req.body.password
     let result = await Connection.selectData(['name'], { user_id: id }, 'user_data', true)
     if (result.length >= 1) {
-        res.send('3')
+        res.send({error: 3})
     } else {
         let json = {}
         type.forEach((item) => {

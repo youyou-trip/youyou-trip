@@ -7,7 +7,7 @@ module.exports = async function (connection) {
                     create table if not exists route_data(
                     route_id VARCHAR(25) NOT NULL,
                     user_id VARCHAR(100) NOT NULL,
-                    date DATE NOT NULL,
+                    date VARCHAR(20) NOT NULL,
                     start VARCHAR(50) NOT NULL,
                     end VARCHAR(50) NOT NULL,
                     passCity TEXT,

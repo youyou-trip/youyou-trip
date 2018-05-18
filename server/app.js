@@ -10,6 +10,7 @@ var cityRouter = require('./routes/city')
 var sightRouter = require('./routes/sight')
 var mineRouter = require('./routes/mine')
 var trainRouter = require('./routes/train')
+var communityRouter = require('./routes/community')
 
 
 app.use(bodyParser.urlencoded({
@@ -27,6 +28,7 @@ app.use('/city', cityRouter)
 app.use('/sight', sightRouter)
 app.use('/mine', mineRouter)
 app.use('/route', routeRouter)
+app.use('/community', communityRouter)
 
 app.listen(3000, function (e) {
   if (e)

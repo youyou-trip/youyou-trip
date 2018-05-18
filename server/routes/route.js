@@ -41,15 +41,15 @@ router.post('/save-city', async function (req, res) {
         })
         res.send('1')
     } else {
-        // client.hmset(req.cookies.token, ["route", cities], function (err, result) {
-        //     if (err) {
-        //         console.log(err)
-        //     }
-        //     /*设置过期时间为1天*/
-        //     console.log('路线：' + start + '->' + end + '存储成功')
-        //     client.EXPIRE(req.cookies.token, 86400);
-        // });
-        res.send('0')
+        client.hmset(req.cookies.token, ["route", cities], function (err, result) {
+            if (err) {
+                console.log(err)
+            }
+            /*设置过期时间为1天*/
+            console.log('存储成功')
+            client.EXPIRE(req.cookies.token, 86400);
+        });
+        res.send('1')
     }
 });
 
@@ -59,13 +59,13 @@ router.post('/save-sight', async function (req, res, next) {
     if (!req.cookies || !req.cookies.token) {
         return res.send('0')
     }
-    let user_id = token.user_id
-    let routeId = token.timestamp      // 获取路径id
-    let passSights = [], count = 0       // 经过景点的名称，存入数据表中
-    let user = (await Connection.selectData(['tags'], { user_id: user_id }, 'user_data', true))[0]
-    let json = JSON.parse(user['tags'])
 
     if (token.login) {
+        let user_id = token.user_id
+        let routeId = token.timestamp      // 获取路径id
+        let passSights = [], count = 0       // 经过景点的名称，存入数据表中
+        let user = (await Connection.selectData(['tags'], { user_id: user_id }, 'user_data', true))[0]
+        let json = JSON.parse(user['tags'])
         // 读取每一个中间节点，并保存，最后存入route_data数据表中
         for (let key in sights) {
             count++
@@ -97,14 +97,13 @@ router.post('/save-sight', async function (req, res, next) {
                             {
                                 user_id: user_id
                             }, 'user_data')
-                        return res.send({error: 1})
+                        return res.send({ error: 1 })
                     }
                 }
             })
         }
     } else {
-        console.log(222222222222222)
-        return res.send({error: 0})
+        return res.send({ error: 0 })
     }
 })
 
@@ -238,8 +237,8 @@ router.get('/city', async function (req, res) {
             return
         }
         let route = (await Connection.selectData(['passCity'], { route_id: timestamp }, 'route_data', true))[0]
-        if(!route){
-            res.send({error: 0})
+        if (!route) {
+            res.send({ error: 0 })
         }
         let cities = JSON.parse(route['passCity'])
         let hotels = []
@@ -251,7 +250,21 @@ router.get('/city', async function (req, res) {
             }
         })
     } else {
-        res.send({ error: 0 })
+        client.HGETALL(req.cookies.token, function (err, result) {
+            if (err) {
+                console.log(err)
+            }
+            let passCity = []
+            let route = result['route'].split(',')
+            route.forEach(async (item, index) => {
+                let thisCity = (await Connection.selectData(['name'], { city_id: item }, 'city_data', true))[0]
+                passCity.push(thisCity['name'])
+                if (index == route.length - 1) {
+                    console.log(passCity)
+                    res.send({ error: 1, passCity: JSON.stringify(passCity) })
+                }
+            })
+        })
     }
 })
 

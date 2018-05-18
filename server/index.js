@@ -15,11 +15,11 @@ async function main() {
 
     // await initCityData(Connection)
 
-    await initHotelData(Connection)
+    // await initHotelData(Connection)
 
     // await initUserData(Connection)
 
-    // await initRouteData(Connection)
+    await initRouteData(Connection)
 
     // await initSightData(Connection)
 
