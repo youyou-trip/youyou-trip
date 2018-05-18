@@ -7,7 +7,6 @@ const config = require('../config')
 var util = require('../lib')
 var fs = require('fs')
 const key = fs.readFileSync(__dirname + '/../lib/primate.key')
-const type = JSON.parse(fs.readFileSync(__dirname + '/../resource/sights-type.json', 'utf8'))
 var Connection = new Mysql(config.db)
 var client = redis.createClient()
 

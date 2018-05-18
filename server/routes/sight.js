@@ -6,7 +6,6 @@ var router = express.Router();
 var Mysql = require('../sqlTool');
 var models = require('../config');
 const key = fs.readFileSync(__dirname + '/../lib/primate.key')
-const type = JSON.parse(fs.readFileSync(__dirname + '/../resource/sights-type.json', 'utf8'))
 // 连接数据库
 var Connection = new Mysql(models.db);
 
