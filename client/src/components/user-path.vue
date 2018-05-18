@@ -42,7 +42,7 @@ export default {
           for(let i =0;i<res.data.userData.length;i++){
             let day = new Date(Date.parse(res.data.userData[i].date))
             this.userData.push({
-              date:day.toLocaleString(),
+              date:day.toLocaleString().slice(0,9),
               end:res.data.userData[i].end,
               passCity:JSON.parse(res.data.userData[i].passCity),
               sights:JSON.parse(res.data.userData[i].sights),

@@ -42,7 +42,8 @@
       <Button @click="Postpath" type="success">确认路线</Button>
     </div>
     <div class="gettrain">
-      <Table width="550" border :columns="columns" :data="data"></Table>
+      <div class="close" @click="close">X</div>
+      <Table width="550" border :columns="columns" :data="data" class="Table"></Table>
     </div>
   </div>
 </template>
@@ -88,6 +89,8 @@ export default {
               "终到时间":res.data.trains.value[i][8]})
             }
           }
+          let Dom = document.querySelector(".gettrain")
+          Dom.style.display = "block";
         })
     },
     getHot(e){
@@ -190,6 +193,10 @@ export default {
           alert("存储成功，请到我的出行查看！")
         })
         
+    },
+    close(){
+      let Dom = document.querySelector(".gettrain")
+      Dom.style.display = "none";
     }
   },
   mounted () {
@@ -316,6 +323,28 @@ export default {
   .gettrain
     display:none
     position:fixed
-    top:20%
-    left:20%
+    top:0
+    z-index :1000
+    width:100%
+    height:100%
+    background-color:rgba(0,0,0,.5)
+    .Table
+      position:absolute
+      height:100%
+      top:0
+      right:0
+      left:0
+      bottom:0
+      overflow:auto
+      margin:auto
+    .close
+      cursor:pointer
+      position:fixed
+      height: 20px
+      width:20px
+      background-color:#fff
+      line-height :20px
+      border-radius:10px
+      top:10px
+      right:10px
 </style>
