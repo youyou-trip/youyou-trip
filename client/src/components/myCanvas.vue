@@ -34,24 +34,24 @@ export default {
           }
         })
       },
-      road(x,y,z,w){ //画线
+      road(x,y,z,w,d){ //画线
       let canvas =document.querySelector('#myCanvas');
       let ctx = canvas.getContext('2d');
-      // if(d>=100){
-      //   return ;
-      // }else{
-      //   d +=2
-      // }
+      if(d>=100){
+        return ;
+      }else{
+        d +=2
+      }
       ctx.beginPath();
       ctx.strokeStyle = '#1c86d1';
       ctx.lineWidth = 1;
       ctx.moveTo(x,y);
-      ctx.lineTo(x+(z-x),y+(w-y));
+      ctx.lineTo(x+(z-x)/100*d,y+(w-y)/100*d);
       ctx.stroke();
-      // let self = this;
-      // this.rFrame = window.requestAnimationFrame(function () {
-      //   self.road(x,y,z,w,d)
-      // })
+      let self = this;
+      this.rFrame = window.requestAnimationFrame(function () {
+        self.road(x,y,z,w,d)
+      })
     },
     rander(city,x,y,tmp){ //画圆
       let canvas =document.querySelector('#myCanvas');
@@ -107,10 +107,10 @@ export default {
         this.ID = IDpath;
         let self = this;
         for(let i= 0;i<arrPath.length-1;i++){
-          // this.timer = setTimeout(function(){
-            self.road(arrPath[i].X,arrPath[i].Y,arrPath[i+1].X,arrPath[i+1].Y)}
-            // ,1200*i)
-        // }
+          this.timer = setTimeout(function(){
+            self.road(arrPath[i].X,arrPath[i].Y,arrPath[i+1].X,arrPath[i+1].Y,0)}
+            ,1200*i)
+        }
       }
   }
 }
