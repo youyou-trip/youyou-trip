@@ -4,7 +4,7 @@ function createId(){
     function randomChar() {
         return randomLists.charAt(Math.floor(Math.random() * randomLists.length));
     }
-    // 生成16位随机字符，每4位用 - 连接
+    // 生成8位随机字符
     for(let i = 0;i < 8; i++) {
         id += randomChar();
     }

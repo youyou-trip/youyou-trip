@@ -187,12 +187,18 @@ export default {
         data:this.sightPath
       })
         .then(res => {
-          alert("存储成功，请到我的出行查看！")
+          console.log(res)
+          if(res.data.error == 1){
+            alert("存储成功，请到我的出行查看！")
+          } else if(res.data.error == 0) {
+            alert('您未登陆，请先登录！')
+          }
+            
         })
         
     }
   },
-  mounted () {
+  created () {
     this.$fetch({//获取城市
       method: 'get',
       url: '/api/route/city'
@@ -224,8 +230,8 @@ export default {
         }
       })
       .catch(()=>{
-        alert("请选择路径");
-        this.$router.push('/');
+        // alert("请选择路径");
+        // this.$router.push('/');
       })
 
   }

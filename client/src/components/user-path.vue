@@ -30,7 +30,7 @@ export default {
   },
   methods: {
   },
-  mounted (){
+  created (){
     this.$fetch({//获取城市
       method: 'get',
       url: '/api/mine'
@@ -38,9 +38,10 @@ export default {
       .then(res => {
         if (res.data.error === 1) {
           for(let i =0;i<res.data.userData.length;i++){
-            let day = new Date(Date.parse(res.data.userData[i].date))
+            console.log(res.data.userData[i].date)
+          //  let day = new Date(Date.parse(res.data.userData[i].date))
             this.userData.push({
-              date:day.toLocaleString(),
+              date:res.data.userData[i].date,
               end:res.data.userData[i].end,
               passCity:JSON.parse(res.data.userData[i].passCity),
               sights:JSON.parse(res.data.userData[i].sights),

@@ -33,7 +33,7 @@ module.exports = async function (connection) {
                     link TEXT,
                     mapsearchaladdin TEXT,
                     PRIMARY KEY(hotel_id)
-                    )ENGINE=InnoDB DEFAULT CHARSET=utf8;`;
+                    )ENGINE=MyISAM DEFAULT CHARSET=utf8;`;
     console.log('初始化酒店信息...');
 
     await new Promise((resolve, reject) => {

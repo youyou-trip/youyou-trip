@@ -19,7 +19,7 @@ module.exports = async function (connection) {
                     pointY VARCHAR(100),
                     station VARCHAR(100),
                     PRIMARY KEY(city_id)
-                    )ENGINE=InnoDB DEFAULT CHARSET=utf8;`;
+                    )ENGINE=MyISAM DEFAULT CHARSET=utf8;`;
     console.log('初始化城市信息...')
     await new Promise((resolve, reject) => {
         connection.Connection.query(createCitysTable, function (err, results, fields) {

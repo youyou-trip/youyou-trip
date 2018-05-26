@@ -253,14 +253,15 @@ router.get('/city', async function (req, res) {
             if (err) {
                 console.log(err)
             }
-            let passCity = []
+            let passCity = [], hotels = []
             let route = result['route'].split(',')
             route.forEach(async (item, index) => {
-                let thisCity = (await Connection.selectData(['name'], { city_id: item }, 'city_data', true))[0]
-                passCity.push(thisCity['name'])
+                let thisCity = (await Connection.selectData(['name'], { city_id: item }, 'city_data', true))[0]['name']
+                passCity.push(thisCity)
+                let thisHotel = await Connection.selectData(['name', 'diPointX', 'diPointY'], { area_name: thisCity }, 'hotel_data', false)
+                hotels.push(thisHotel)
                 if (index == route.length - 1) {
-                    console.log(passCity)
-                    res.send({ error: 1, passCity: JSON.stringify(passCity) })
+                    res.send({ error: 1, passCity: JSON.stringify(passCity), hotel: hotels })
                 }
             })
         })

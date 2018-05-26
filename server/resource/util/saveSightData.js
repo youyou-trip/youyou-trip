@@ -38,7 +38,7 @@ module.exports = async function (connection) {
                     brief_ticket TEXT,
                     mapsearchaladdin TEXT,
                     PRIMARY KEY(sight_id)
-                    )ENGINE=InnoDB DEFAULT CHARSET=utf8;`;
+                    )ENGINE=MyISAM DEFAULT CHARSET=utf8;`;
     console.log('初始化景点信息...');
 
     await new Promise((resolve, reject) => {

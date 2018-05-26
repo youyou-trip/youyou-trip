@@ -35,7 +35,7 @@ export default {
       City:this.$store.getters.getCity,
     }
   },
-  mounted () {
+  created () {
     this.$fetch({
       method: 'get',
       url: '/api/'
