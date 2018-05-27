@@ -76,6 +76,10 @@ export default {
           this.path.push(res.data.end);
         }
       })
+       .catch(()=>{
+        alert("请选择路径");
+        this.$router.push('/');
+      })
   },
   methods: {
     clickpath(){

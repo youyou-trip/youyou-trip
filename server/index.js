@@ -13,15 +13,15 @@ const config = require('./config')
 async function main() {
     var Connection = new Mysql(config.db)
 
-    // await initCityData(Connection)
+    await initCityData(Connection)
 
     await initHotelData(Connection)
 
-    // await initUserData(Connection)
+    await initUserData(Connection)
 
-    // await initRouteData(Connection)
+    await initRouteData(Connection)
 
-    // await initSightData(Connection)
+    await initSightData(Connection)
 
     // connection.end();
 }
