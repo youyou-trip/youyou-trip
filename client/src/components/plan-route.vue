@@ -55,7 +55,6 @@ export default {
         this.country = res.data.country;
       }
     });
-
     this.$fetch({
       method: "get",
       url: "/api/route/start-end"
@@ -86,8 +85,10 @@ export default {
       new BMap.MapTypeControl({
         mapTypes: [BMAP_NORMAL_MAP, BMAP_HYBRID_MAP]
       })
-    );
-    map.enableScrollWheelZoom(true);
+       .catch(()=>{
+        alert("请选择路径");
+        this.$router.push('/');
+      }))
   },
   methods: {
     clickpath() {

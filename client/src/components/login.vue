@@ -32,11 +32,15 @@ export default {
         }
       })
         .then(res => {
-          if (res.data == 1) {
-            this.$store.dispatch('User', this.user_id)
-            window.localStorage.setItem('user_id', this.user_id)
+          if (res.data.error == 1) {
+            console.log(res.data)
+            this.$store.dispatch('User', res.data.username)
+            window.localStorage.setItem('user_id', res.data.username)
             this.$router.push('/')
             this.$emit('index','true');
+          }
+          if(res.data.error == 2){
+            alert("登录失败，请重新登录")
           }
         })
     }

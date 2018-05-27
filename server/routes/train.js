@@ -31,6 +31,7 @@ router.get('/', async (req, res) => {
         res.send({error: 1, trains: {}})
         return;
     }
+    console.log(s, e)
     let url = `http://www.jt2345.com/huoche/zhanzhan/${s}-${e}.htm`
 
     request.get(url)
@@ -54,8 +55,10 @@ router.get('/', async (req, res) => {
                     }
                     value.push(res)
                 }
+                console.log(value)
                 res.send({ error: 1, trains: { col: col, value: value } })
             } else if (sres.statusCode == 404) {
+                console.log(111111111111111111111)
                 res.send({error: 1, trains: {}})
             }
 

@@ -17,11 +17,11 @@ async function main() {
 
     // await initHotelData(Connection)
 
-    // await initUserData(Connection)
+    await initUserData(Connection)
 
-    // await initRouteData(Connection)
+    await initRouteData(Connection)
 
-    // await initSightData(Connection)
+    await initSightData(Connection)
 
     // connection.end();
 }

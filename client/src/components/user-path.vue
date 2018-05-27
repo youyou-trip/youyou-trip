@@ -13,7 +13,9 @@
             <div v-for="city in item.passCity">{{city}} </div>
           </div>
           <div class="body-sight">
-            <div v-for="sight in item.sights">{{sight.sight}}</div>
+            <div v-for="sight in item.sights">
+              <div v-for="sitem in sight.sight">{{sitem}}</div>
+            </div>
           </div>
         </div>
       </div>
@@ -38,10 +40,9 @@ export default {
       .then(res => {
         if (res.data.error === 1) {
           for(let i =0;i<res.data.userData.length;i++){
-            console.log(res.data.userData[i].date)
           //  let day = new Date(Date.parse(res.data.userData[i].date))
             this.userData.push({
-              date:res.data.userData[i].date,
+              date:res.data.userData[i].date.slice(0,9),
               end:res.data.userData[i].end,
               passCity:JSON.parse(res.data.userData[i].passCity),
               sights:JSON.parse(res.data.userData[i].sights),

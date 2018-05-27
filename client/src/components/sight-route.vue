@@ -34,6 +34,14 @@
       </Scroll>
     </div>
     <div class="cityPath">
+      <div class="hotel-box">
+        <!-- {{this.hotel}} -->
+        <select v-for="(item,index) in this.hotel">
+          <option value ="volvo" v-for="home in item" :data-X ="home.diPointX" :data-Y ="home.diPointY">
+            {{home.name}}
+          </option>
+        </select> 
+      </div>
       <div class="path" v-for="(city,key) in sightPath">
         <div class="header">{{key}}规划路线</div>
         <div calss="cityname">{{city}}</div>
@@ -42,7 +50,8 @@
       <Button @click="Postpath" type="success">确认路线</Button>
     </div>
     <div class="gettrain">
-      <Table width="550" border :columns="columns" :data="data"></Table>
+      <div class="close" @click="close">X</div>
+      <Table width="550" border :columns="columns" :data="data" class="Table"></Table>
     </div>
   </div>
 </template>
@@ -60,7 +69,8 @@ export default {
       hotsight:[],
       hotSightsStart:0,
       cityPath:{},
-      sightPath:{}
+      sightPath:{},
+      hotel:{}
     }
   },methods:{
     getTrain(e){
@@ -71,22 +81,28 @@ export default {
       })
         .then(res => {
           if(res.data.error == 1){
-            this.columns=[];
-            this.data = [];
-            for(let i = 0;i<res.data.trains.col.length;i++){
-              this.columns.push({title:res.data.trains.col[i],key:res.data.trains.col[i]});
+            if(res.data.trains.value.length){
+              this.columns=[];
+              this.data = [];
+              for(let i = 0;i<res.data.trains.col.length;i++){
+                this.columns.push({title:res.data.trains.col[i],key:res.data.trains.col[i]});
+              }
+              for(let i = 0;i<res.data.trains.value.length;i++){
+                this.data.push({"车次":res.data.trains.value[i][0],
+                "始发站":res.data.trains.value[i][1],
+                "始发时间":res.data.trains.value[i][2],
+                "出发站":res.data.trains.value[i][3],
+                "开车时间":res.data.trains.value[i][4],
+                "到达站":res.data.trains.value[i][5],
+                "到达时间":res.data.trains.value[i][6],
+                "终点站":res.data.trains.value[i][7],
+                "终到时间":res.data.trains.value[i][8]})
+              }
             }
-            for(let i = 0;i<res.data.trains.value.length;i++){
-              this.data.push({"车次":res.data.trains.value[i][0],
-              "始发站":res.data.trains.value[i][1],
-              "始发时间":res.data.trains.value[i][2],
-              "出发站":res.data.trains.value[i][3],
-              "开车时间":res.data.trains.value[i][4],
-              "到达站":res.data.trains.value[i][5],
-              "到达时间":res.data.trains.value[i][6],
-              "终点站":res.data.trains.value[i][7],
-              "终到时间":res.data.trains.value[i][8]})
-            }
+            let Dom = document.querySelector(".gettrain")
+            Dom.style.display = "block";
+          }else{
+            alert("无乘车信息！");
           }
         })
     },
@@ -177,7 +193,6 @@ export default {
           }
         }
         this.sightPath = sightpath;
-        console.log(this.sightPath)
       }
     },
     Postpath(){
@@ -196,6 +211,10 @@ export default {
             
         })
         
+    },
+    close(){
+      let Dom = document.querySelector(".gettrain")
+      Dom.style.display = "none";
     }
   },
   created () {
@@ -209,7 +228,7 @@ export default {
           for(let i=0;i<this.city.length;i++){
             this.cityPath[this.city[i]]=[];
           }
-
+          this.hotel=res.data.hotel;
           this.now = this.city[0];
           this.$fetch({//获取hot
             method: 'get',
@@ -322,6 +341,28 @@ export default {
   .gettrain
     display:none
     position:fixed
-    top:20%
-    left:20%
+    top:0
+    z-index :1000
+    width:100%
+    height:100%
+    background-color:rgba(0,0,0,.5)
+    .Table
+      position:absolute
+      height:100%
+      top:0
+      right:0
+      left:0
+      bottom:0
+      overflow:auto
+      margin:auto
+    .close
+      cursor:pointer
+      position:fixed
+      height: 20px
+      width:20px
+      background-color:#fff
+      line-height :20px
+      border-radius:10px
+      top:10px
+      right:10px
 </style>

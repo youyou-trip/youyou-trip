@@ -41,8 +41,9 @@ export default {
           }
         }).then(res => {
           if (res.data == 1) {
-            this.$store.dispatch('User',this.user_id)
-            window.localStorage.setItem('user_id', this.user_id)
+            // this.$store.dispatch('User',this.name)
+            // window.localStorage.setItem('user_id', this.name)
+            alert("注册成功，请登录")
             this.$router.push('/')
             this.$emit('index','true');
           }
